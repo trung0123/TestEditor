@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:emojicon="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ll_talk_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <com.rockerhieu.emojicon.EmojiconEditText
+        android:id="@+id/edt_talk_chat"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:autoLink="all"
+        android:background="@null"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="top"
+        android:hint="メッセージ"
+        android:padding="@dimen/_10sdp"
+        android:textColor="@android:color/black"
+        android:textCursorDrawable="@null"
+        android:textSize="@dimen/_13ssp"
+        emojicon:emojiconSize="@dimen/_17sdp" />
+
+    <LinearLayout
+        android:id="@+id/ll_talk_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/ll_talk_keyboard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/_10sdp">
+
+            <ImageView
+                android:id="@+id/img_talk_keyboard"
+                android:layout_width="@dimen/_15sdp"
+                android:layout_height="@dimen/_15sdp"
+                android:background="@drawable/keyboard_background_holo"
+                android:focusable="false" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_talk_add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/_10sdp">
+
+            <ImageView
+                android:id="@+id/img_talk_add"
+                android:layout_width="@dimen/_15sdp"
+                android:layout_height="@dimen/_15sdp"
+                android:background="@drawable/ic_add"
+                android:focusable="false"
+                android:tag="0" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_talk_smile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/_10sdp">
+
+            <ImageView
+                android:id="@+id/img_talk_smile"
+                android:layout_width="@dimen/_15sdp"
+                android:layout_height="@dimen/_15sdp"
+                android:background="@drawable/ic_face"
+                android:focusable="false" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/frame_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_150sdp"
+        android:visibility="gone" />
+
+</LinearLayout>
