@@ -7,9 +7,11 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.util.TypedValue
+import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
+import android.view.WindowManager
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.rockerhieu.emojicon.EmojiconGridFragment.OnEmojiconClickedListener
@@ -18,6 +20,7 @@ import com.rockerhieu.emojicon.EmojiconsFragment.OnEmojiconBackspaceClickedListe
 import com.rockerhieu.emojicon.emoji.Emojicon
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlin.math.abs
+
 
 class MainActivity : AppCompatActivity(), OnKeyboardVisibilityListener, View.OnClickListener,
     OnEmojiconBackspaceClickedListener, OnEmojiconClickedListener,
@@ -96,26 +99,42 @@ class MainActivity : AppCompatActivity(), OnKeyboardVisibilityListener, View.OnC
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.ll_talk_keyboard -> {
-                hideGalleryLayout()
+                if (isSmilesLayoutShowing()) {
+                    window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
+                } else {
+                    window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+                }
                 if (isShown) {
                     hideKeyboard(this)
+                    if (isSmilesLayoutShowing()) {
+                        hideGalleryLayout()
+                    }
                 } else {
                     showKeyboard(this)
                 }
             }
             R.id.ll_talk_style -> {
+                window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
                 onReplaceFragmentGalleryTalk()
-                hideKeyboard(this)
                 showGalleryLayout()
+                if (isShown) {
+                    hideKeyboard(this)
+                }
+
             }
             R.id.ll_talk_smile -> {
+                window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
                 onReplaceFragmentEmoji()
-                hideKeyboard(this)
-                showSmileLayout()
+                showGalleryLayout()
+                if (isShown) {
+                    hideKeyboard(this)
+                }
             }
             R.id.edt_talk_chat -> {
                 if (isSmilesLayoutShowing()) {
-                    hideGalleryLayout()
+                    window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
+                } else {
+                    window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
                 }
             }
         }
@@ -129,9 +148,7 @@ class MainActivity : AppCompatActivity(), OnKeyboardVisibilityListener, View.OnC
     }
 
     private fun showGalleryLayout() {
-        mainThreadHandler.postDelayed({
-            frame_bottom.visibility = View.VISIBLE
-        }, DELAY_SHOWING_SMILE_PANEL.toLong())
+        frame_bottom.visibility = View.VISIBLE
     }
 
     private fun onReplaceFragmentEmoji() {
@@ -140,18 +157,12 @@ class MainActivity : AppCompatActivity(), OnKeyboardVisibilityListener, View.OnC
         if (fragment == null) {
             supportFragmentManager
                 .beginTransaction()
-                .add(
+                .replace(
                     R.id.frame_bottom,
                     EmojiconsFragment.newInstance(false),
                     "emojiconsFragment"
                 ).commit()
         }
-    }
-
-    private fun showSmileLayout() {
-        mainThreadHandler.postDelayed({
-            frame_bottom.visibility = View.VISIBLE
-        }, DELAY_SHOWING_SMILE_PANEL.toLong())
     }
 
     private fun hideGalleryLayout() {
@@ -174,5 +185,19 @@ class MainActivity : AppCompatActivity(), OnKeyboardVisibilityListener, View.OnC
         edt_talk_chat.append(name)
     }
 
+    override fun onBackPressed() {
+        if (!isSmilesLayoutShowing() && !isShown) {
+            super.onBackPressed()
+        }
 
+        if (isSmilesLayoutShowing()) {
+            window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
+            hideGalleryLayout()
+        } else {
+            window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+        }
+        if (isShown) {
+            hideKeyboard(this)
+        }
+    }
 }
