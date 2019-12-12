@@ -25,6 +25,11 @@
         android:textSize="@dimen/_13ssp"
         emojicon:emojiconSize="@dimen/_17sdp" />
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/light_gray" />
+
     <LinearLayout
         android:id="@+id/ll_talk_input"
         android:layout_width="match_parent"
@@ -34,44 +39,99 @@
 
         <LinearLayout
             android:id="@+id/ll_talk_keyboard"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:padding="@dimen/_10sdp">
 
             <ImageView
-                android:id="@+id/img_talk_keyboard"
-                android:layout_width="@dimen/_15sdp"
-                android:layout_height="@dimen/_15sdp"
-                android:background="@drawable/keyboard_background_holo"
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:background="@drawable/ic_keyboard"
                 android:focusable="false" />
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/ll_talk_add"
-            android:layout_width="wrap_content"
+            android:id="@+id/ll_talk_voice"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:padding="@dimen/_10sdp">
 
             <ImageView
-                android:id="@+id/img_talk_add"
-                android:layout_width="@dimen/_15sdp"
-                android:layout_height="@dimen/_15sdp"
-                android:background="@drawable/ic_add"
-                android:focusable="false"
-                android:tag="0" />
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:background="@drawable/ic_keyboard_voice"
+                android:focusable="false" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_talk_camera"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="@dimen/_10sdp">
+
+            <ImageView
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:background="@drawable/ic_camera"
+                android:focusable="false" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/ll_talk_smile"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:padding="@dimen/_10sdp">
 
             <ImageView
-                android:id="@+id/img_talk_smile"
-                android:layout_width="@dimen/_15sdp"
-                android:layout_height="@dimen/_15sdp"
-                android:background="@drawable/ic_face"
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:background="@drawable/ic_tag_faces"
+                android:focusable="false" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_talk_style"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="@dimen/_10sdp">
+
+            <ImageView
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:background="@drawable/ic_font_download"
+                android:focusable="false" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_talk_color"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="@dimen/_10sdp">
+
+            <ImageView
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:background="@drawable/ic_format_color_text"
+                android:focusable="false" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_talk_web"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="@dimen/_10sdp">
+
+            <ImageView
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:background="@drawable/ic_show_chart"
                 android:focusable="false" />
         </LinearLayout>
     </LinearLayout>

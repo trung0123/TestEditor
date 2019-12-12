@@ -21,7 +21,7 @@ import kotlin.math.abs
 
 class MainActivity : AppCompatActivity(), OnKeyboardVisibilityListener, View.OnClickListener,
     OnEmojiconBackspaceClickedListener, OnEmojiconClickedListener,
-    GalleryTalkFragment.GalleryListener {
+    StyleTextFragment.GalleryListener {
 
     var globalLayoutListener: OnGlobalLayoutListener? = null
     var isShown = false
@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity(), OnKeyboardVisibilityListener, View.OnC
     }
 
     private fun setEvents() {
-        ll_talk_add.setOnClickListener(this)
+        ll_talk_style.setOnClickListener(this)
         ll_talk_smile.setOnClickListener(this)
         ll_talk_keyboard.setOnClickListener(this)
         edt_talk_chat.setOnClickListener(this)
@@ -103,7 +103,7 @@ class MainActivity : AppCompatActivity(), OnKeyboardVisibilityListener, View.OnC
                     showKeyboard(this)
                 }
             }
-            R.id.ll_talk_add -> {
+            R.id.ll_talk_style -> {
                 onReplaceFragmentGalleryTalk()
                 hideKeyboard(this)
                 showGalleryLayout()
@@ -122,10 +122,10 @@ class MainActivity : AppCompatActivity(), OnKeyboardVisibilityListener, View.OnC
     }
 
     private fun onReplaceFragmentGalleryTalk() {
-        val galleryTalkFragment = GalleryTalkFragment()
-        galleryTalkFragment.callback = this
+        val styleTextFragment = StyleTextFragment()
+        styleTextFragment.callback = this
         supportFragmentManager.beginTransaction()
-            .replace(R.id.frame_bottom, galleryTalkFragment, "GalleryTalkFragment").commit()
+            .replace(R.id.frame_bottom, styleTextFragment, "StyleTextFragment").commit()
     }
 
     private fun showGalleryLayout() {

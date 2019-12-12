@@ -5,4 +5,7 @@
     <color name="colorAccent">#D81B60</color>
 
     <color name="gray_b">#BBBBBB</color>
+    <color name="light_gray">#EEEEEE</color>
+    <color name="gray_2">#9C9C9C</color>
+    <color name="gray_disable">#33000000</color>
 </resources>
