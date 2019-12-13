@@ -7,7 +7,6 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.util.TypedValue
-import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
@@ -30,8 +29,6 @@ class MainActivity : AppCompatActivity(), OnKeyboardVisibilityListener, View.OnC
     var isShown = false
     var hideKeyboard: Int = 0
     var showKeyboard: Int = 0
-    var mainThreadHandler = Handler(Looper.getMainLooper())
-    private val DELAY_SHOWING_SMILE_PANEL = 100
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -93,12 +90,18 @@ class MainActivity : AppCompatActivity(), OnKeyboardVisibilityListener, View.OnC
     }
 
     override fun onVisibilityChanged(visible: Boolean) {
-
+        if (!visible && (ll_talk_keyboard.tag == "1" || edt_talk_chat.tag == "1")){
+            if (isSmilesLayoutShowing()) {
+                hideGalleryLayout()
+            }
+        }
     }
 
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.ll_talk_keyboard -> {
+                ll_talk_keyboard.tag = "1"
+                edt_talk_chat.tag = "0"
                 if (isSmilesLayoutShowing()) {
                     window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
                 } else {
@@ -114,6 +117,8 @@ class MainActivity : AppCompatActivity(), OnKeyboardVisibilityListener, View.OnC
                 }
             }
             R.id.ll_talk_style -> {
+                ll_talk_keyboard.tag = "0"
+                edt_talk_chat.tag = "0"
                 window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
                 onReplaceFragmentGalleryTalk()
                 showGalleryLayout()
@@ -123,6 +128,8 @@ class MainActivity : AppCompatActivity(), OnKeyboardVisibilityListener, View.OnC
 
             }
             R.id.ll_talk_smile -> {
+                ll_talk_keyboard.tag = "0"
+                edt_talk_chat.tag = "0"
                 window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
                 onReplaceFragmentEmoji()
                 showGalleryLayout()
@@ -131,6 +138,8 @@ class MainActivity : AppCompatActivity(), OnKeyboardVisibilityListener, View.OnC
                 }
             }
             R.id.edt_talk_chat -> {
+                ll_talk_keyboard.tag = "0"
+                edt_talk_chat.tag = "1"
                 if (isSmilesLayoutShowing()) {
                     window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
                 } else {
@@ -191,10 +200,7 @@ class MainActivity : AppCompatActivity(), OnKeyboardVisibilityListener, View.OnC
         }
 
         if (isSmilesLayoutShowing()) {
-            window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
             hideGalleryLayout()
-        } else {
-            window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
         }
         if (isShown) {
             hideKeyboard(this)
