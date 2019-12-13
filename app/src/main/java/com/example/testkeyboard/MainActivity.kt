@@ -3,10 +3,9 @@ package com.example.testkeyboard
 import android.graphics.Rect
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.util.TypedValue
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
@@ -14,10 +13,7 @@ import android.view.WindowManager
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.rockerhieu.emojicon.EmojiconGridFragment.OnEmojiconClickedListener
 import com.rockerhieu.emojicon.EmojiconsFragment
-import com.rockerhieu.emojicon.EmojiconsFragment.OnEmojiconBackspaceClickedListener
-import com.rockerhieu.emojicon.emoji.Emojicon
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlin.math.abs
 
@@ -43,7 +39,19 @@ class MainActivity : AppCompatActivity(), OnKeyboardVisibilityListener, View.OnC
         ll_talk_style.setOnClickListener(this)
         ll_talk_smile.setOnClickListener(this)
         ll_talk_keyboard.setOnClickListener(this)
-        edt_talk_chat.setOnClickListener(this)
+
+        edt_talk_chat.setOnTouchListener { _, event ->
+            if (event.action == MotionEvent.ACTION_DOWN) {
+                ll_talk_keyboard.tag = "0"
+                edt_talk_chat.tag = "1"
+                if (isSmilesLayoutShowing()) {
+                    window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
+                } else {
+                    window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+                }
+            }
+            false
+        }
     }
 
     private fun setKeyboardVisibilityListener(onKeyboardVisibilityListener: OnKeyboardVisibilityListener) {
@@ -90,7 +98,7 @@ class MainActivity : AppCompatActivity(), OnKeyboardVisibilityListener, View.OnC
     }
 
     override fun onVisibilityChanged(visible: Boolean) {
-        if (!visible && (ll_talk_keyboard.tag == "1" || edt_talk_chat.tag == "1")){
+        if (!visible && (ll_talk_keyboard.tag == "1" || edt_talk_chat.tag == "1")) {
             if (isSmilesLayoutShowing()) {
                 hideGalleryLayout()
             }
@@ -135,15 +143,6 @@ class MainActivity : AppCompatActivity(), OnKeyboardVisibilityListener, View.OnC
                 showGalleryLayout()
                 if (isShown) {
                     hideKeyboard(this)
-                }
-            }
-            R.id.edt_talk_chat -> {
-                ll_talk_keyboard.tag = "0"
-                edt_talk_chat.tag = "1"
-                if (isSmilesLayoutShowing()) {
-                    window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
-                } else {
-                    window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
                 }
             }
         }
