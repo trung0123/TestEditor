@@ -33,3 +33,18 @@ fun showKeyboard(activity: Activity) {
         activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
     inputManager.toggleSoftInput(0, InputMethodManager.SHOW_IMPLICIT)
 }
+
+sealed class TextStyle {
+    object H1 : TextStyle()
+    object H2 : TextStyle()
+    object H3 : TextStyle()
+    object H4 : TextStyle()
+    object TextLeft : TextStyle()
+    object TextCenter : TextStyle()
+    object TextRight : TextStyle()
+    object Bold : TextStyle()
+    object Italic : TextStyle()
+    object StrikeThrough : TextStyle()
+    object Underline : TextStyle()
+
+}

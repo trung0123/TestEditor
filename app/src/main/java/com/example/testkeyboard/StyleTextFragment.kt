@@ -40,37 +40,62 @@ class StyleTextFragment : Fragment(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.ll_style_left -> setStyleLayout(Style.LEFT)
+            R.id.ll_style_left -> {
+                callback?.passData(TextStyle.TextLeft)
+                setStyleLayout(Style.LEFT)
+            }
 
-            R.id.ll_style_center -> setStyleLayout(Style.CENTER)
+            R.id.ll_style_center -> {
+                callback?.passData(TextStyle.TextCenter)
+                setStyleLayout(Style.CENTER)
+            }
 
-            R.id.ll_style_right -> setStyleLayout(Style.RIGHT)
+            R.id.ll_style_right -> {
+                callback?.passData(TextStyle.TextRight)
+                setStyleLayout(Style.RIGHT)
+            }
 
-            R.id.ll_text_small -> setTextSizeLayout(Style.SMALL)
+            R.id.ll_text_small -> {
+                callback?.passData(TextStyle.H4)
+                setTextSizeLayout(Style.SMALL)
+            }
 
-            R.id.ll_text_normal -> setTextSizeLayout(Style.NORMAL)
+            R.id.ll_text_normal -> {
+                callback?.passData(TextStyle.H3)
+                setTextSizeLayout(Style.NORMAL)
+            }
 
-            R.id.ll_text_big -> setTextSizeLayout(Style.BIG)
+            R.id.ll_text_big -> {
+                callback?.passData(TextStyle.H2)
+                setTextSizeLayout(Style.BIG)
+            }
 
-            R.id.ll_text_biggest -> setTextSizeLayout(Style.BIGGEST)
+            R.id.ll_text_biggest -> {
+                callback?.passData(TextStyle.H1)
+                setTextSizeLayout(Style.BIGGEST)
+            }
 
             R.id.ll_text_bold -> {
                 isBold = !isBold
+                callback?.passData(TextStyle.Bold)
                 setTextStyleLayout(Style.BOLD, isBold)
             }
 
             R.id.ll_text_italic -> {
                 isItalic = !isItalic
+                callback?.passData(TextStyle.Italic)
                 setTextStyleLayout(Style.ITALIC, isItalic)
             }
 
             R.id.ll_text_strike -> {
                 isStrike = !isStrike
+                callback?.passData(TextStyle.StrikeThrough)
                 setTextStyleLayout(Style.STRIKE, isStrike)
             }
 
             R.id.ll_text_underline -> {
                 isUnderline = !isUnderline
+                callback?.passData(TextStyle.Underline)
                 setTextStyleLayout(Style.UNDERLINE, isUnderline)
             }
         }
@@ -342,7 +367,7 @@ class StyleTextFragment : Fragment(), View.OnClickListener {
     }
 
     interface GalleryListener {
-        fun passData(name: String)
+        fun passData(style: TextStyle)
     }
 
     enum class Style {

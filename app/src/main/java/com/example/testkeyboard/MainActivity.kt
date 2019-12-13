@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.view.WindowManager
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.rockerhieu.emojicon.EmojiconGridFragment.OnEmojiconClickedListener
 import com.rockerhieu.emojicon.EmojiconsFragment
@@ -22,7 +23,6 @@ import kotlin.math.abs
 
 
 class MainActivity : AppCompatActivity(), OnKeyboardVisibilityListener, View.OnClickListener,
-    OnEmojiconBackspaceClickedListener, OnEmojiconClickedListener,
     StyleTextFragment.GalleryListener {
 
     var globalLayoutListener: OnGlobalLayoutListener? = null
@@ -178,20 +178,30 @@ class MainActivity : AppCompatActivity(), OnKeyboardVisibilityListener, View.OnC
         frame_bottom.visibility = View.GONE
     }
 
-    override fun onEmojiconBackspaceClicked(v: View?) {
-        EmojiconsFragment.backspace(edt_talk_chat)
-    }
-
-    override fun onEmojiconClicked(emojicon: Emojicon?) {
-        EmojiconsFragment.input(edt_talk_chat, emojicon)
-    }
-
     private fun isSmilesLayoutShowing(): Boolean {
         return frame_bottom.visibility == View.VISIBLE
     }
 
-    override fun passData(name: String) {
-        edt_talk_chat.append(name)
+    override fun passData(style: TextStyle) {
+        when (style) {
+            TextStyle.H1 -> edt_talk_chat.setHeading(1)
+            TextStyle.H2 -> edt_talk_chat.setHeading(2)
+            TextStyle.H3 -> edt_talk_chat.setHeading(3)
+            TextStyle.H4 -> edt_talk_chat.setHeading(4)
+            TextStyle.TextLeft -> edt_talk_chat.setAlignLeft()
+            TextStyle.TextCenter -> edt_talk_chat.setAlignCenter()
+            TextStyle.TextRight -> edt_talk_chat.setAlignRight()
+            TextStyle.Bold -> edt_talk_chat.setBold()
+            TextStyle.Italic -> edt_talk_chat.setItalic()
+            TextStyle.StrikeThrough -> edt_talk_chat.setStrikeThrough()
+            TextStyle.Underline -> edt_talk_chat.setUnderline()
+        }
+        Toast.makeText(this, "LLL", Toast.LENGTH_LONG).show()
+//        if (isShow) {
+//            edt_talk_chat.updateTextStyle(EditorTextStyle.H1)
+//        } else {
+//            edt_talk_chat.updateTextStyle(EditorTextStyle.H3)
+//        }
     }
 
     override fun onBackPressed() {
