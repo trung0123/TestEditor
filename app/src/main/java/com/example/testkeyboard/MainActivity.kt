@@ -1,5 +1,6 @@
 package com.example.testkeyboard
 
+import android.graphics.Color
 import android.graphics.Rect
 import android.os.Build
 import android.os.Bundle
@@ -11,14 +12,15 @@ import android.view.ViewGroup
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.view.WindowManager
 import android.widget.LinearLayout
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.testkeyboard.RichEditor.*
 import com.rockerhieu.emojicon.EmojiconsFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlin.math.abs
 
 
-class MainActivity : AppCompatActivity(), OnKeyboardVisibilityListener, View.OnClickListener,
+class MainActivity : AppCompatActivity(),
+    OnKeyboardVisibilityListener, View.OnClickListener,
     StyleTextFragment.GalleryListener {
 
     var globalLayoutListener: OnGlobalLayoutListener? = null
@@ -31,26 +33,48 @@ class MainActivity : AppCompatActivity(), OnKeyboardVisibilityListener, View.OnC
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setEvents()
+        initEditor()
         // Set Keyboard Event
         setKeyboardVisibilityListener(this)
     }
 
-    private fun setEvents() {
-        ll_talk_style.setOnClickListener(this)
-        ll_talk_smile.setOnClickListener(this)
-        ll_talk_keyboard.setOnClickListener(this)
+    private fun initEditor() {
+        edt_chat.setLayerType(View.LAYER_TYPE_HARDWARE, null)
+        edt_chat.setEditorFontSize(22)
+        edt_chat.setEditorFontColor(Color.BLACK)
+        edt_chat.setPadding(10, 10, 10, 10)
+        edt_chat.isFocusable = true
+        edt_chat.setPlaceholder("Insert text here...")
+    }
 
-        edt_talk_chat.setOnTouchListener { _, event ->
+    private fun setEvents() {
+        ll_text_style.setOnClickListener(this)
+        ll_smile.setOnClickListener(this)
+        ll_keyboard.setOnClickListener(this)
+        ll_camera.setOnClickListener(this)
+        ll_text_color.setOnClickListener(this)
+        ll_background_color.setOnClickListener(this)
+        ll_insert_link.setOnClickListener(this)
+
+        edt_chat.setOnTouchListener { _, event ->
             if (event.action == MotionEvent.ACTION_DOWN) {
-                ll_talk_keyboard.tag = "0"
-                edt_talk_chat.tag = "1"
+                ll_keyboard.tag = "0"
+                edt_chat.tag = "1"
                 if (isSmilesLayoutShowing()) {
                     window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
                 } else {
                     window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
                 }
+                if (!isShown) {
+                    showKeyboard(this)
+                }
             }
+
             false
+        }
+
+        edt_chat.setOnTextChangeListener { text ->
+            Log.d("Trung", text)
         }
     }
 
@@ -83,7 +107,8 @@ class MainActivity : AppCompatActivity(), OnKeyboardVisibilityListener, View.OnC
                     }
                     alreadyOpen = isShown
                     if (convertPxToDp(heightDiff) > 100) {
-                        showKeyboard = convertPxToDp(heightDiff)
+                        showKeyboard =
+                            convertPxToDp(heightDiff)
                         val params = LinearLayout.LayoutParams(
                             ViewGroup.LayoutParams.MATCH_PARENT,
                             convertDpToPx(abs(showKeyboard - hideKeyboard))
@@ -98,7 +123,7 @@ class MainActivity : AppCompatActivity(), OnKeyboardVisibilityListener, View.OnC
     }
 
     override fun onVisibilityChanged(visible: Boolean) {
-        if (!visible && (ll_talk_keyboard.tag == "1" || edt_talk_chat.tag == "1")) {
+        if (!visible && (ll_keyboard.tag == "1" || edt_chat.tag == "1")) {
             if (isSmilesLayoutShowing()) {
                 hideGalleryLayout()
             }
@@ -107,9 +132,9 @@ class MainActivity : AppCompatActivity(), OnKeyboardVisibilityListener, View.OnC
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.ll_talk_keyboard -> {
-                ll_talk_keyboard.tag = "1"
-                edt_talk_chat.tag = "0"
+            R.id.ll_keyboard -> {
+                ll_keyboard.tag = "1"
+                edt_chat.tag = "0"
                 if (isSmilesLayoutShowing()) {
                     window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
                 } else {
@@ -124,9 +149,9 @@ class MainActivity : AppCompatActivity(), OnKeyboardVisibilityListener, View.OnC
                     showKeyboard(this)
                 }
             }
-            R.id.ll_talk_style -> {
-                ll_talk_keyboard.tag = "0"
-                edt_talk_chat.tag = "0"
+            R.id.ll_text_style -> {
+                ll_keyboard.tag = "0"
+                edt_chat.tag = "0"
                 window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
                 onReplaceFragmentGalleryTalk()
                 showGalleryLayout()
@@ -135,9 +160,9 @@ class MainActivity : AppCompatActivity(), OnKeyboardVisibilityListener, View.OnC
                 }
 
             }
-            R.id.ll_talk_smile -> {
-                ll_talk_keyboard.tag = "0"
-                edt_talk_chat.tag = "0"
+            R.id.ll_smile -> {
+                ll_keyboard.tag = "0"
+                edt_chat.tag = "0"
                 window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
                 onReplaceFragmentEmoji()
                 showGalleryLayout()
@@ -183,24 +208,47 @@ class MainActivity : AppCompatActivity(), OnKeyboardVisibilityListener, View.OnC
 
     override fun passData(style: TextStyle) {
         when (style) {
-            TextStyle.H1 -> edt_talk_chat.setHeading(1)
-            TextStyle.H2 -> edt_talk_chat.setHeading(2)
-            TextStyle.H3 -> edt_talk_chat.setHeading(3)
-            TextStyle.H4 -> edt_talk_chat.setHeading(4)
-            TextStyle.TextLeft -> edt_talk_chat.setAlignLeft()
-            TextStyle.TextCenter -> edt_talk_chat.setAlignCenter()
-            TextStyle.TextRight -> edt_talk_chat.setAlignRight()
-            TextStyle.Bold -> edt_talk_chat.setBold()
-            TextStyle.Italic -> edt_talk_chat.setItalic()
-            TextStyle.StrikeThrough -> edt_talk_chat.setStrikeThrough()
-            TextStyle.Underline -> edt_talk_chat.setUnderline()
+            TextStyle.H1 -> edt_chat.setHeading(1)
+            TextStyle.H2 -> edt_chat.setHeading(2)
+            TextStyle.H3 -> edt_chat.setHeading(3)
+            TextStyle.H4 -> edt_chat.setHeading(4)
+            TextStyle.TextLeft -> {
+                edt_chat.clearFocusEditor()
+                edt_chat.setAlignLeft()
+            }
+            TextStyle.TextCenter -> {
+                edt_chat.clearFocusEditor()
+                edt_chat.setAlignCenter()
+            }
+            TextStyle.TextRight -> {
+                edt_chat.clearFocusEditor()
+                edt_chat.setAlignRight()
+            }
+            TextStyle.Bold -> {
+                window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
+
+                edt_chat.clearAndFocusEditor()
+                edt_chat.setBold()
+            }
+            TextStyle.Italic -> {
+                window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
+
+                edt_chat.clearAndFocusEditor()
+                edt_chat.setItalic()
+            }
+            TextStyle.StrikeThrough -> {
+                window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
+
+                edt_chat.clearAndFocusEditor()
+                edt_chat.setStrikeThrough()
+            }
+            TextStyle.Underline -> {
+                window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
+
+                edt_chat.clearAndFocusEditor()
+                edt_chat.setUnderline()
+            }
         }
-        Toast.makeText(this, "LLL", Toast.LENGTH_LONG).show()
-//        if (isShow) {
-//            edt_talk_chat.updateTextStyle(EditorTextStyle.H1)
-//        } else {
-//            edt_talk_chat.updateTextStyle(EditorTextStyle.H3)
-//        }
     }
 
     override fun onBackPressed() {

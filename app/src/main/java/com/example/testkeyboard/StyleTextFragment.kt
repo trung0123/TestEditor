@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import com.example.testkeyboard.RichEditor.TextStyle
 import kotlinx.android.synthetic.main.fragment_style_text.*
 
 
@@ -43,16 +44,19 @@ class StyleTextFragment : Fragment(), View.OnClickListener {
             R.id.ll_style_left -> {
                 callback?.passData(TextStyle.TextLeft)
                 setStyleLayout(Style.LEFT)
+                imb_style_left.switchCheckedState()
             }
 
             R.id.ll_style_center -> {
                 callback?.passData(TextStyle.TextCenter)
                 setStyleLayout(Style.CENTER)
+                imb_style_center.switchCheckedState()
             }
 
             R.id.ll_style_right -> {
                 callback?.passData(TextStyle.TextRight)
                 setStyleLayout(Style.RIGHT)
+                imb_style_right.switchCheckedState()
             }
 
             R.id.ll_text_small -> {
@@ -79,24 +83,28 @@ class StyleTextFragment : Fragment(), View.OnClickListener {
                 isBold = !isBold
                 callback?.passData(TextStyle.Bold)
                 setTextStyleLayout(Style.BOLD, isBold)
+                tv_style_bold.switchCheckedState()
             }
 
             R.id.ll_text_italic -> {
                 isItalic = !isItalic
                 callback?.passData(TextStyle.Italic)
                 setTextStyleLayout(Style.ITALIC, isItalic)
+                tv_style_italic.switchCheckedState()
             }
 
             R.id.ll_text_strike -> {
                 isStrike = !isStrike
                 callback?.passData(TextStyle.StrikeThrough)
                 setTextStyleLayout(Style.STRIKE, isStrike)
+                tv_style_strike.switchCheckedState()
             }
 
             R.id.ll_text_underline -> {
                 isUnderline = !isUnderline
                 callback?.passData(TextStyle.Underline)
                 setTextStyleLayout(Style.UNDERLINE, isUnderline)
+                tv_style_underline.switchCheckedState()
             }
         }
     }

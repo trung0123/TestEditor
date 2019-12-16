@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">TestKeyboard</string>
+    <string name="app_name">TestEditor</string>
     <string name="underline"><u>A</u></string>
     <string name="strikethrough"><strike>A</strike></string>
 </resources>

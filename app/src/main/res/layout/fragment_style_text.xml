@@ -21,10 +21,11 @@
             android:background="@android:color/black"
             android:gravity="center">
 
-            <ImageView
+            <com.example.testkeyboard.WriteCustomButton
+                android:id="@+id/imb_style_left"
                 android:layout_width="@dimen/_30sdp"
                 android:layout_height="@dimen/_30sdp"
-                android:background="@drawable/ic_format_align_left" />
+                android:src="@drawable/ic_format_align_left" />
         </LinearLayout>
 
         <LinearLayout
@@ -36,10 +37,11 @@
             android:background="@android:color/white"
             android:gravity="center">
 
-            <ImageView
+            <com.example.testkeyboard.WriteCustomButton
+                android:id="@+id/imb_style_center"
                 android:layout_width="@dimen/_30sdp"
                 android:layout_height="@dimen/_30sdp"
-                android:background="@drawable/ic_format_align_center" />
+                android:src="@drawable/ic_format_align_center" />
         </LinearLayout>
 
         <LinearLayout
@@ -50,10 +52,11 @@
             android:background="@android:color/white"
             android:gravity="center">
 
-            <ImageView
+            <com.example.testkeyboard.WriteCustomButton
+                android:id="@+id/imb_style_right"
                 android:layout_width="@dimen/_30sdp"
                 android:layout_height="@dimen/_30sdp"
-                android:background="@drawable/ic_format_align_right" />
+                android:src="@drawable/ic_format_align_right" />
         </LinearLayout>
     </LinearLayout>
 
@@ -69,10 +72,11 @@
             android:layout_height="match_parent"
             android:layout_marginEnd="1dp"
             android:layout_weight="1"
-            android:background="@android:color/white"
+            android:background="@android:color/black"
             android:gravity="center">
 
-            <TextView
+            <com.example.testkeyboard.WriteCustomTextView
+                android:id="@+id/tv_style_h1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="A"
@@ -86,15 +90,16 @@
             android:layout_height="match_parent"
             android:layout_marginEnd="1dp"
             android:layout_weight="1"
-            android:background="@android:color/black"
+            android:background="@android:color/white"
             android:gravity="center">
 
-            <TextView
+            <com.example.testkeyboard.WriteCustomTextView
+                android:id="@+id/tv_style_h2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="A"
                 android:textColor="@color/gray_2"
-                android:textSize="@dimen/_18ssp" />
+                android:textSize="@dimen/_19ssp" />
         </LinearLayout>
 
         <LinearLayout
@@ -106,12 +111,13 @@
             android:background="@android:color/white"
             android:gravity="center">
 
-            <TextView
+            <com.example.testkeyboard.WriteCustomTextView
+                android:id="@+id/tv_style_h3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="A"
                 android:textColor="@color/gray_2"
-                android:textSize="@dimen/_21ssp" />
+                android:textSize="@dimen/_23ssp" />
         </LinearLayout>
 
         <LinearLayout
@@ -122,12 +128,13 @@
             android:background="@android:color/white"
             android:gravity="center">
 
-            <TextView
+            <com.example.testkeyboard.WriteCustomTextView
+                android:id="@+id/tv_style_h4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="A"
                 android:textColor="@color/gray_2"
-                android:textSize="@dimen/_25ssp" />
+                android:textSize="@dimen/_27ssp" />
         </LinearLayout>
     </LinearLayout>
 
@@ -146,7 +153,8 @@
             android:background="@android:color/white"
             android:gravity="center">
 
-            <TextView
+            <com.example.testkeyboard.WriteCustomTextView
+                android:id="@+id/tv_style_bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="A"
@@ -164,7 +172,8 @@
             android:background="@android:color/white"
             android:gravity="center">
 
-            <TextView
+            <com.example.testkeyboard.WriteCustomTextView
+                android:id="@+id/tv_style_italic"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="A"
@@ -182,7 +191,8 @@
             android:background="@android:color/white"
             android:gravity="center">
 
-            <TextView
+            <com.example.testkeyboard.WriteCustomTextView
+                android:id="@+id/tv_style_strike"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/strikethrough"
@@ -198,7 +208,8 @@
             android:background="@android:color/white"
             android:gravity="center">
 
-            <TextView
+            <com.example.testkeyboard.WriteCustomTextView
+                android:id="@+id/tv_style_underline"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/underline"
