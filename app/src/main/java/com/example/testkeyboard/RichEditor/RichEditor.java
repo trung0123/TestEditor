@@ -27,7 +27,6 @@ import java.util.regex.Pattern;
 
 import static com.example.testkeyboard.RichEditor.UtilsKt.decodeResource;
 import static com.example.testkeyboard.RichEditor.UtilsKt.getCurrentTime;
-import static com.example.testkeyboard.RichEditor.UtilsKt.showKeyboard;
 import static com.example.testkeyboard.RichEditor.UtilsKt.toBase64;
 import static com.example.testkeyboard.RichEditor.UtilsKt.toBitmap;
 
@@ -66,7 +65,7 @@ public class RichEditor extends WebView {
         UNORDEREDLIST,
         JUSTIFYCENTER,
         JUSTIFYFULL,
-        JUSTUFYLEFT,
+        JUSTIFYLEFT,
         JUSTIFYRIGHT,
         BACKGROUND_COLOR_WHITE(255, 255, 255),
         BACKGROUND_COLOR_BLACK(0, 0, 0),
@@ -468,6 +467,10 @@ public class RichEditor extends WebView {
     public void insertLink(String href, String title) {
         exec("javascript:RE.prepareInsert();");
         exec("javascript:RE.insertLink('" + href + "', '" + title + "');");
+    }
+
+    public void insertText(String text){
+        exec("javascript:RE.insertText();");
     }
 
     public void insertTodo() {

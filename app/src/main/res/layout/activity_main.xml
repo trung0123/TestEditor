@@ -12,9 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:autoLink="web|email"
         android:background="@android:color/white"
-        android:focusable="false"
         android:gravity="start"
         android:textCursorDrawable="@drawable/edit_cursor" />
 
@@ -34,8 +32,8 @@
             android:id="@+id/ll_keyboard"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackground"
             android:layout_weight="1"
+            android:background="?attr/selectableItemBackground"
             android:padding="@dimen/_10sdp">
 
             <com.example.testkeyboard.WriteCustomButton
@@ -49,15 +47,15 @@
             android:id="@+id/ll_camera"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackground"
             android:layout_weight="1"
+            android:background="?attr/selectableItemBackground"
             android:padding="@dimen/_10sdp">
 
             <com.example.testkeyboard.WriteCustomButton
                 android:layout_width="@dimen/_20sdp"
                 android:layout_height="@dimen/_20sdp"
-                android:src="@drawable/ic_camera"
-                android:focusable="false" />
+                android:focusable="false"
+                android:src="@drawable/ic_camera" />
         </LinearLayout>
 
         <LinearLayout
@@ -71,8 +69,8 @@
             <com.example.testkeyboard.WriteCustomButton
                 android:layout_width="@dimen/_20sdp"
                 android:layout_height="@dimen/_20sdp"
-                android:src="@drawable/ic_tag_faces"
-                android:focusable="false" />
+                android:focusable="false"
+                android:src="@drawable/ic_tag_faces" />
         </LinearLayout>
 
         <LinearLayout
@@ -87,60 +85,62 @@
                 android:id="@+id/imb_text_style"
                 android:layout_width="@dimen/_20sdp"
                 android:layout_height="@dimen/_20sdp"
-                android:src="@drawable/ic_text_fields"
-                android:focusable="false" />
+                android:focusable="false"
+                android:src="@drawable/ic_text_fields" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/ll_background_color"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackground"
             android:layout_weight="1"
+            android:background="?attr/selectableItemBackground"
             android:padding="@dimen/_10sdp">
 
             <com.example.testkeyboard.WriteCustomButton
+                android:id="@+id/imb_background_color"
                 android:layout_width="@dimen/_20sdp"
                 android:layout_height="@dimen/_20sdp"
-                android:src="@drawable/ic_format_color_fill"
-                android:focusable="false" />
+                android:focusable="false"
+                android:src="@drawable/ic_format_color_fill" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/ll_text_color"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackground"
             android:layout_weight="1"
+            android:background="?attr/selectableItemBackground"
             android:padding="@dimen/_10sdp">
 
             <com.example.testkeyboard.WriteCustomButton
+                android:id="@+id/imb_text_color"
                 android:layout_width="@dimen/_20sdp"
                 android:layout_height="@dimen/_20sdp"
-                android:src="@drawable/ic_format_color_text"
-                android:focusable="false" />
+                android:focusable="false"
+                android:src="@drawable/ic_format_color_text" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/ll_insert_link"
             android:layout_width="0dp"
-            android:background="?attr/selectableItemBackground"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="?attr/selectableItemBackground"
             android:padding="@dimen/_10sdp">
 
             <com.example.testkeyboard.WriteCustomButton
                 android:layout_width="@dimen/_20sdp"
                 android:layout_height="@dimen/_20sdp"
-                android:src="@drawable/ic_insert_link"
-                android:focusable="false" />
+                android:focusable="false"
+                android:src="@drawable/ic_insert_link" />
         </LinearLayout>
     </LinearLayout>
 
     <FrameLayout
         android:id="@+id/frame_bottom"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_150sdp"
+        android:layout_height="@dimen/_130sdp"
         android:visibility="gone" />
 
 </LinearLayout>

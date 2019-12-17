@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.testkeyboard.RichEditor.TextStyle
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_style_text.*
 
 
@@ -16,6 +17,9 @@ class StyleTextFragment : Fragment(), View.OnClickListener {
     private var isItalic = false
     private var isStrike = false
     private var isUnderline = false
+
+    private var buttons: ArrayList<WriteCustomButton>? = null
+    private var textViews: ArrayList<WriteCustomTextView>? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,46 +41,203 @@ class StyleTextFragment : Fragment(), View.OnClickListener {
         ll_text_italic.setOnClickListener(this)
         ll_text_strike.setOnClickListener(this)
         ll_text_underline.setOnClickListener(this)
+
+
+        val edtChat = (requireActivity() as MainActivity).edt_chat
+        edtChat.setOnDecorationChangeListener { _, types ->
+            buttons = ArrayList(
+                listOf<WriteCustomButton>(
+                    imb_style_left, imb_style_center, imb_style_right
+                )
+            )
+            textViews = ArrayList(
+                listOf<WriteCustomTextView>(
+                    tv_style_h4, tv_style_h3, tv_style_h2, tv_style_h1
+                )
+            )
+            for (type in types) {
+                when (type.name) {
+                    "JUSTIFYLEFT" -> {
+                        if (imb_style_left.isChecked) {
+                            imb_style_left.switchCheckedState()
+
+                        }
+                        ll_style_left.setBackgroundColor(
+                            ContextCompat.getColor(
+                                requireActivity(),
+                                R.color.black
+                            )
+                        )
+                        buttons!!.remove(imb_style_left)
+                    }
+                    "JUSTIFYCENTER" -> {
+                        if (imb_style_center.isChecked) {
+                            imb_style_center.switchCheckedState()
+
+                        }
+                        ll_style_center.setBackgroundColor(
+                            ContextCompat.getColor(
+                                requireActivity(),
+                                R.color.black
+                            )
+                        )
+                        buttons!!.remove(imb_style_center)
+                    }
+                    "JUSTIFYRIGHT" -> {
+                        if (imb_style_right.isChecked) {
+                            imb_style_right.switchCheckedState()
+
+                        }
+                        ll_style_right.setBackgroundColor(
+                            ContextCompat.getColor(
+                                requireActivity(),
+                                R.color.black
+                            )
+                        )
+                        buttons!!.remove(imb_style_right)
+                    }
+                    "H1" -> {
+                        if (tv_style_h1.isChecked) {
+                            tv_style_h1.switchCheckedState()
+                        }
+                        ll_text_biggest.setBackgroundColor(
+                            ContextCompat.getColor(
+                                requireActivity(),
+                                R.color.black
+                            )
+                        )
+                        textViews!!.remove(tv_style_h1)
+                    }
+                    "H2" -> {
+                        if (tv_style_h2.isChecked) {
+                            tv_style_h2.switchCheckedState()
+                        }
+                        ll_text_big.setBackgroundColor(
+                            ContextCompat.getColor(
+                                requireActivity(),
+                                R.color.black
+                            )
+                        )
+                        textViews!!.remove(tv_style_h2)
+                    }
+                    "H3" -> {
+                        if (tv_style_h3.isChecked) {
+                            tv_style_h3.switchCheckedState()
+                        }
+                        ll_text_normal.setBackgroundColor(
+                            ContextCompat.getColor(
+                                requireActivity(),
+                                R.color.black
+                            )
+                        )
+                        textViews!!.remove(tv_style_h3)
+                    }
+                    "H4" -> {
+                        if (tv_style_h4.isChecked) {
+                            tv_style_h4.switchCheckedState()
+                        }
+                        ll_text_small.setBackgroundColor(
+                            ContextCompat.getColor(
+                                requireActivity(),
+                                R.color.black
+                            )
+                        )
+                        textViews!!.remove(tv_style_h4)
+                    }
+                }
+            }
+            for (button in buttons!!) {
+                button.isChecked = false
+                when (button.id) {
+                    R.id.imb_style_left -> ll_style_left.setBackgroundColor(
+                        ContextCompat.getColor(
+                            requireActivity(),
+                            R.color.white
+                        )
+                    )
+                    R.id.imb_style_center -> ll_style_center.setBackgroundColor(
+                        ContextCompat.getColor(
+                            requireActivity(),
+                            R.color.white
+                        )
+                    )
+                    R.id.imb_style_right -> ll_style_right.setBackgroundColor(
+                        ContextCompat.getColor(
+                            requireActivity(),
+                            R.color.white
+                        )
+                    )
+                }
+            }
+
+            for (textView in textViews!!) {
+                textView.isChecked = false
+                when (textView.id) {
+                    R.id.tv_style_h1 -> ll_text_biggest.setBackgroundColor(
+                        ContextCompat.getColor(
+                            requireActivity(),
+                            R.color.white
+                        )
+                    )
+                    R.id.tv_style_h2 -> ll_text_big.setBackgroundColor(
+                        ContextCompat.getColor(
+                            requireActivity(),
+                            R.color.white
+                        )
+                    )
+                    R.id.tv_style_h3 -> ll_text_normal.setBackgroundColor(
+                        ContextCompat.getColor(
+                            requireActivity(),
+                            R.color.white
+                        )
+                    )
+                    R.id.tv_style_h4 -> ll_text_small.setBackgroundColor(
+                        ContextCompat.getColor(
+                            requireActivity(),
+                            R.color.white
+                        )
+                    )
+                }
+            }
+        }
+        edtChat.insertText("")
     }
 
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.ll_style_left -> {
                 callback?.passData(TextStyle.TextLeft)
-                setStyleLayout(Style.LEFT)
                 imb_style_left.switchCheckedState()
             }
 
             R.id.ll_style_center -> {
                 callback?.passData(TextStyle.TextCenter)
-                setStyleLayout(Style.CENTER)
                 imb_style_center.switchCheckedState()
             }
 
             R.id.ll_style_right -> {
                 callback?.passData(TextStyle.TextRight)
-                setStyleLayout(Style.RIGHT)
                 imb_style_right.switchCheckedState()
             }
 
             R.id.ll_text_small -> {
                 callback?.passData(TextStyle.H4)
-                setTextSizeLayout(Style.SMALL)
+                tv_style_h4.switchCheckedState()
             }
 
             R.id.ll_text_normal -> {
                 callback?.passData(TextStyle.H3)
-                setTextSizeLayout(Style.NORMAL)
+                tv_style_h3.switchCheckedState()
             }
 
             R.id.ll_text_big -> {
                 callback?.passData(TextStyle.H2)
-                setTextSizeLayout(Style.BIG)
+                tv_style_h2.switchCheckedState()
             }
 
             R.id.ll_text_biggest -> {
                 callback?.passData(TextStyle.H1)
-                setTextSizeLayout(Style.BIGGEST)
+                tv_style_h1.switchCheckedState()
             }
 
             R.id.ll_text_bold -> {

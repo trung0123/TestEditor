@@ -1,5 +1,6 @@
 package com.example.testkeyboard
 
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.Rect
 import android.os.Build
@@ -13,7 +14,11 @@ import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.view.WindowManager
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import com.esafirm.imagepicker.features.ImagePicker
+import com.esafirm.imagepicker.model.Image
 import com.example.testkeyboard.RichEditor.*
+import com.example.testkeyboard.Utils.getColor
 import com.rockerhieu.emojicon.EmojiconsFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlin.math.abs
@@ -21,12 +26,13 @@ import kotlin.math.abs
 
 class MainActivity : AppCompatActivity(),
     OnKeyboardVisibilityListener, View.OnClickListener,
-    StyleTextFragment.GalleryListener {
+    StyleTextFragment.GalleryListener, ColorFragment.ColorListener {
 
-    var globalLayoutListener: OnGlobalLayoutListener? = null
-    var isShown = false
-    var hideKeyboard: Int = 0
-    var showKeyboard: Int = 0
+    private var globalLayoutListener: OnGlobalLayoutListener? = null
+    private var isShown = false
+    private var hideKeyboard: Int = 0
+    private var showKeyboard: Int = 0
+    private var buttons: ArrayList<WriteCustomButton>? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,11 +46,50 @@ class MainActivity : AppCompatActivity(),
 
     private fun initEditor() {
         edt_chat.setLayerType(View.LAYER_TYPE_HARDWARE, null)
-        edt_chat.setEditorFontSize(22)
+        edt_chat.setEditorFontSize(16)
         edt_chat.setEditorFontColor(Color.BLACK)
-        edt_chat.setPadding(10, 10, 10, 10)
-        edt_chat.isFocusable = true
+        edt_chat.setEditorPadding(10, 10, 10, 10)
+        edt_chat.setAlignLeft()
+        edt_chat.setOnInitialLoadListener { isReady ->
+            if (isReady) {
+                edt_chat.focusEditor()
+                showKeyboard(this)
+            }
+        }
+
         edt_chat.setPlaceholder("Insert text here...")
+        edt_chat.setOnDecorationChangeListener { _, types ->
+            buttons = ArrayList(
+                listOf<WriteCustomButton>(
+                    imb_background_color,
+                    imb_text_color
+                )
+            )
+            for (type in types) {
+                if (type.name.contains("FONT_COLOR")) {
+                    imb_text_color.setColorFilter(ContextCompat.getColor(this, getColor(type.name)))
+                    if (imb_text_color.isChecked) {
+                        imb_text_color.switchCheckedState()
+                    }
+                    buttons!!.remove(imb_text_color)
+                } else if (type.name.contains("BACKGROUND_COLOR")) {
+                    imb_background_color.setColorFilter(
+                        ContextCompat.getColor(
+                            this,
+                            getColor(type.name)
+                        )
+                    )
+                    if (imb_background_color.isChecked) {
+                        imb_background_color.switchCheckedState()
+                    }
+                    buttons!!.remove(imb_background_color)
+                }
+            }
+            for (button in buttons!!) {
+                button.setColorFilter(ContextCompat.getColor(this, R.color.black))
+                button.isChecked = false
+            }
+        }
     }
 
     private fun setEvents() {
@@ -64,9 +109,6 @@ class MainActivity : AppCompatActivity(),
                     window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
                 } else {
                     window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
-                }
-                if (!isShown) {
-                    showKeyboard(this)
                 }
             }
 
@@ -146,6 +188,7 @@ class MainActivity : AppCompatActivity(),
                         hideGalleryLayout()
                     }
                 } else {
+                    edt_chat.focusEditor()
                     showKeyboard(this)
                 }
             }
@@ -170,6 +213,27 @@ class MainActivity : AppCompatActivity(),
                     hideKeyboard(this)
                 }
             }
+            R.id.ll_text_color -> {
+                ll_keyboard.tag = "0"
+                edt_chat.tag = "0"
+                window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
+                onReplaceFragmentColor(1)
+                showGalleryLayout()
+                if (isShown) {
+                    hideKeyboard(this)
+                }
+            }
+            R.id.ll_background_color -> {
+                ll_keyboard.tag = "0"
+                edt_chat.tag = "0"
+                window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
+                onReplaceFragmentColor(2)
+                showGalleryLayout()
+                if (isShown) {
+                    hideKeyboard(this)
+                }
+            }
+            R.id.ll_camera -> start(v)
         }
     }
 
@@ -178,6 +242,13 @@ class MainActivity : AppCompatActivity(),
         styleTextFragment.callback = this
         supportFragmentManager.beginTransaction()
             .replace(R.id.frame_bottom, styleTextFragment, "StyleTextFragment").commit()
+    }
+
+    private fun onReplaceFragmentColor(type: Int) {
+        val colorFragment = ColorFragment.newInstance(type)
+        colorFragment.callback = this
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.frame_bottom, colorFragment, "ColorFragment").commit()
     }
 
     private fun showGalleryLayout() {
@@ -208,27 +279,49 @@ class MainActivity : AppCompatActivity(),
 
     override fun passData(style: TextStyle) {
         when (style) {
-            TextStyle.H1 -> edt_chat.setHeading(1)
-            TextStyle.H2 -> edt_chat.setHeading(2)
-            TextStyle.H3 -> edt_chat.setHeading(3)
-            TextStyle.H4 -> edt_chat.setHeading(4)
-            TextStyle.TextLeft -> {
+            TextStyle.H1 -> {
+                window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
+                edt_chat.setHeading(1)
                 edt_chat.clearFocusEditor()
+            }
+            TextStyle.H2 -> {
+                window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
+                edt_chat.setHeading(2)
+                edt_chat.clearFocusEditor()
+            }
+            TextStyle.H3 -> {
+                window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
+                edt_chat.setHeading(3)
+                edt_chat.clearFocusEditor()
+            }
+            TextStyle.H4 -> {
+                window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
+                edt_chat.setHeading(4)
+                edt_chat.clearFocusEditor()
+            }
+            TextStyle.TextLeft -> {
+                window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
+
                 edt_chat.setAlignLeft()
+                edt_chat.clearFocusEditor()
             }
             TextStyle.TextCenter -> {
-                edt_chat.clearFocusEditor()
+                window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
+
                 edt_chat.setAlignCenter()
+                edt_chat.clearFocusEditor()
             }
             TextStyle.TextRight -> {
+                window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
+
                 edt_chat.clearFocusEditor()
                 edt_chat.setAlignRight()
             }
             TextStyle.Bold -> {
                 window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
 
-                edt_chat.clearAndFocusEditor()
                 edt_chat.setBold()
+                edt_chat.clearAndFocusEditor()
             }
             TextStyle.Italic -> {
                 window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
@@ -261,6 +354,52 @@ class MainActivity : AppCompatActivity(),
         }
         if (isShown) {
             hideKeyboard(this)
+        }
+    }
+
+    override fun passTextColor(value: Int) {
+        edt_chat.setTextColor(ContextCompat.getColor(this, value))
+        if (value != R.color.white) imb_text_color.setColorFilter(
+            ContextCompat.getColor(this, value)
+        ) else imb_text_color.setColorFilter(
+            ContextCompat.getColor(this, R.color.black)
+        )
+
+        imb_text_color.switchCheckedState()
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
+        showKeyboard(this)
+    }
+
+    override fun passBackgroundColor(value: Int) {
+        edt_chat.setTextBackgroundColor(ContextCompat.getColor(this, value))
+        if (value != R.color.white) imb_background_color.setColorFilter(
+            ContextCompat.getColor(this, value)
+        ) else imb_background_color.setColorFilter(
+            ContextCompat.getColor(this, R.color.black)
+        )
+        imb_background_color.switchCheckedState()
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
+        showKeyboard(this)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (ImagePicker.shouldHandle(requestCode, resultCode, data)) {
+            val images = ImagePicker.getImages(data)
+            insertImages(images)
+        }
+        super.onActivityResult(requestCode, resultCode, data)
+    }
+
+    private fun insertImages(images: List<Image>?) {
+        if (images == null) return
+        val stringBuffer = StringBuilder()
+        var i = 0
+        val l = images.size
+        while (i < l) {
+            stringBuffer.append(images[i].path).append("\n")
+            // Handle this
+            edt_chat.insertImage("file://" + images[i].path, "alt")
+            i++
         }
     }
 }

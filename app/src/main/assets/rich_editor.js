@@ -123,6 +123,11 @@ RE.setBackgroundImage = function(image) {
     RE.editor.style.backgroundImage = image;
 }
 
+RE.insertText = function(text){
+    var html = '';
+    RE.insertHTML(html);
+}
+
 RE.setWidth = function(size) {
     RE.editor.style.minWidth = size;
 }

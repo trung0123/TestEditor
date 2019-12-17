@@ -12,5 +12,4 @@ class WriteCustomButton(context: Context?, attrs: AttributeSet?) :
     fun switchCheckedState() {
         isChecked = !isChecked
     }
-
 }

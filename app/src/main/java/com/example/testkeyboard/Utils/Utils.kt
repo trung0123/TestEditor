@@ -9,10 +9,12 @@ import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
+import android.os.Environment
 import android.util.Base64
 import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
+import com.esafirm.imagepicker.features.ImagePicker
 import java.io.ByteArrayOutputStream
 
 interface OnKeyboardVisibilityListener {
@@ -38,10 +40,16 @@ fun hideKeyboard(activity: Activity) {
     }
 }
 
+//fun showKeyboard(activity: Activity) {
+//    val inputManager =
+//        activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+//    inputManager.toggleSoftInput(0, InputMethodManager.SHOW_IMPLICIT)
+//}
+
 fun showKeyboard(activity: Activity) {
     val inputManager =
         activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-    inputManager.toggleSoftInput(0, InputMethodManager.SHOW_IMPLICIT)
+    inputManager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0)
 }
 
 fun closeKeyboard(view: View) {
@@ -102,4 +110,19 @@ fun decodeResource(context: Context, resId: Int): Bitmap? {
 
 fun getCurrentTime(): Long {
     return System.currentTimeMillis()
+}
+
+fun getImagePicker(view: View): ImagePicker {
+    val imagePicker = ImagePicker.create(view.context as Activity)
+    return imagePicker.limit(10) // max images can be selected (99 by default)
+        .toolbarFolderTitle("Gallery")
+        .toolbarDoneButtonText("Confirm")
+        .showCamera(false) // show camera or not (true by default)
+        .folderMode(true)
+        .includeVideo(false)
+        .imageFullDirectory(Environment.getExternalStorageDirectory().path) // can be full path
+}
+
+fun start(view: View) {
+    getImagePicker(view).start() // start image picker activity with request code
 }
