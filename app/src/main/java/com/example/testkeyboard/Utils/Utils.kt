@@ -40,12 +40,6 @@ fun hideKeyboard(activity: Activity) {
     }
 }
 
-//fun showKeyboard(activity: Activity) {
-//    val inputManager =
-//        activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-//    inputManager.toggleSoftInput(0, InputMethodManager.SHOW_IMPLICIT)
-//}
-
 fun showKeyboard(activity: Activity) {
     val inputManager =
         activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -120,7 +114,7 @@ fun getImagePicker(view: View): ImagePicker {
         .showCamera(false) // show camera or not (true by default)
         .folderMode(true)
         .includeVideo(false)
-        .imageFullDirectory(Environment.getExternalStorageDirectory().path) // can be full path
+        .imageFullDirectory(view.context.getExternalFilesDir(null)?.absolutePath) // can be full path
 }
 
 fun start(view: View) {

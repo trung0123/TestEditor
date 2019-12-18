@@ -96,7 +96,6 @@ public class RichEditor extends WebView {
         FONT_COLOR_PALE_CYAN(204, 255, 255),
         FONT_COLOR_GREEN(0, 128, 0);
 
-
         private int r;
         private int g;
         private int b;
@@ -106,6 +105,7 @@ public class RichEditor extends WebView {
             this.g = g;
             this.b = b;
         }
+
 
         Type() {
             this(-1, -1, -1);
@@ -469,7 +469,7 @@ public class RichEditor extends WebView {
         exec("javascript:RE.insertLink('" + href + "', '" + title + "');");
     }
 
-    public void insertText(String text){
+    public void insertText(String text) {
         exec("javascript:RE.insertText();");
     }
 

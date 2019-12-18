@@ -17,6 +17,8 @@ class ColorFragment : Fragment() {
     private var type: Int = 0
 
     companion object {
+        val TAG = ColorFragment::class.java.simpleName
+
         fun newInstance(type: Int): ColorFragment {
             val fragment = ColorFragment()
             val bundle = Bundle()

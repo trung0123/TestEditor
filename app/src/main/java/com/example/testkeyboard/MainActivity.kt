@@ -35,6 +35,7 @@ class MainActivity : AppCompatActivity(),
     private var hideKeyboard: Int = 0
     private var showKeyboard: Int = 0
     private var buttons: ArrayList<WriteCustomButton>? = null
+    private lateinit var onDecorationChange: RichEditor.OnDecorationStateListener
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,6 +53,7 @@ class MainActivity : AppCompatActivity(),
         edt_chat.setEditorFontColor(Color.BLACK)
         edt_chat.setEditorPadding(10, 10, 10, 10)
         edt_chat.setAlignLeft()
+
         edt_chat.setOnInitialLoadListener { isReady ->
             if (isReady) {
                 edt_chat.focusEditor()
@@ -60,38 +62,48 @@ class MainActivity : AppCompatActivity(),
         }
 
         edt_chat.setPlaceholder("Insert text here...")
-        edt_chat.setOnDecorationChangeListener { _, types ->
-            buttons = ArrayList(
-                listOf<WriteCustomButton>(
-                    imb_background_color,
-                    imb_text_color
-                )
-            )
-            for (type in types) {
-                if (type.name.contains("FONT_COLOR")) {
-                    imb_text_color.setColorFilter(ContextCompat.getColor(this, getColor(type.name)))
-                    if (imb_text_color.isChecked) {
-                        imb_text_color.switchCheckedState()
-                    }
-                    buttons!!.remove(imb_text_color)
-                } else if (type.name.contains("BACKGROUND_COLOR")) {
-                    imb_background_color.setColorFilter(
-                        ContextCompat.getColor(
-                            this,
-                            getColor(type.name)
-                        )
+
+
+        onDecorationChange =
+            RichEditor.OnDecorationStateListener { _, types ->
+                buttons = ArrayList(
+                    listOf<WriteCustomButton>(
+                        imb_background_color,
+                        imb_text_color
                     )
-                    if (imb_background_color.isChecked) {
-                        imb_background_color.switchCheckedState()
+                )
+                for (type in types) {
+                    if (type.name.contains("FONT_COLOR")) {
+                        imb_text_color.setColorFilter(
+                            ContextCompat.getColor(
+                                this,
+                                getColor(type.name)
+                            )
+                        )
+                        if (imb_text_color.isChecked) {
+                            imb_text_color.switchCheckedState()
+                        }
+                        buttons!!.remove(imb_text_color)
+                    } else if (type.name.contains("BACKGROUND_COLOR")) {
+                        imb_background_color.setColorFilter(
+                            ContextCompat.getColor(
+                                this,
+                                getColor(type.name)
+                            )
+                        )
+                        if (imb_background_color.isChecked) {
+                            imb_background_color.switchCheckedState()
+                        }
+                        buttons!!.remove(imb_background_color)
                     }
-                    buttons!!.remove(imb_background_color)
+                }
+
+                for (button in buttons!!) {
+                    button.setColorFilter(ContextCompat.getColor(this, R.color.black))
+                    button.isChecked = false
                 }
             }
-            for (button in buttons!!) {
-                button.setColorFilter(ContextCompat.getColor(this, R.color.black))
-                button.isChecked = false
-            }
-        }
+        edt_chat.setOnDecorationChangeListener(onDecorationChange)
     }
 
     private fun setEvents() {
@@ -111,6 +123,13 @@ class MainActivity : AppCompatActivity(),
                     window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
                 } else {
                     window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+                }
+
+                val galleryFragment =
+                    supportFragmentManager.findFragmentByTag(StyleTextFragment.TAG) as StyleTextFragment?
+                if (galleryFragment != null) {
+                    galleryFragment.edtChat.setOnDecorationChangeListener(null)
+                    edt_chat.setOnDecorationChangeListener(onDecorationChange)
                 }
             }
 
@@ -245,13 +264,13 @@ class MainActivity : AppCompatActivity(),
                 val edtLink: EditText = view.findViewById(R.id.dialog_href)
                 builder.run {
                     setView(view)
-                    setPositiveButton("OK") { dialog, id ->
+                    setPositiveButton("OK") { _, _ ->
                         edt_chat.insertLink(
                             edtLink.text.toString(),
                             edtTitle.text.toString()
                         )
                     }
-                    setNegativeButton("Cancel") { dialog, id ->
+                    setNegativeButton("Cancel") { dialog, _ ->
                         dialog.cancel()
                     }
                     create().show()
@@ -262,17 +281,20 @@ class MainActivity : AppCompatActivity(),
     }
 
     private fun onReplaceFragmentGalleryTalk() {
-        val styleTextFragment = StyleTextFragment()
-        styleTextFragment.callback = this
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.frame_bottom, styleTextFragment, "StyleTextFragment").commit()
+        var styleTextFragment = supportFragmentManager.findFragmentByTag(StyleTextFragment.TAG)
+        if (styleTextFragment == null) {
+            styleTextFragment = StyleTextFragment()
+            styleTextFragment.callback = this
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.frame_bottom, styleTextFragment, StyleTextFragment.TAG).commit()
+        }
     }
 
     private fun onReplaceFragmentColor(type: Int) {
         val colorFragment = ColorFragment.newInstance(type)
         colorFragment.callback = this
         supportFragmentManager.beginTransaction()
-            .replace(R.id.frame_bottom, colorFragment, "ColorFragment").commit()
+            .replace(R.id.frame_bottom, colorFragment, ColorFragment.TAG).commit()
     }
 
     private fun showGalleryLayout() {
@@ -366,6 +388,10 @@ class MainActivity : AppCompatActivity(),
                 edt_chat.setUnderline()
             }
         }
+    }
+
+    override fun resume() {
+        edt_chat.setOnDecorationChangeListener(onDecorationChange)
     }
 
     override fun onBackPressed() {

@@ -1,17 +1,24 @@
 package com.example.testkeyboard
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import com.example.testkeyboard.RichEditor.RichEditor
 import com.example.testkeyboard.RichEditor.TextStyle
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_style_text.*
 
 
 class StyleTextFragment : Fragment(), View.OnClickListener {
+
+    companion object {
+        val TAG = StyleTextFragment::class.java.simpleName
+    }
+
     var callback: GalleryListener? = null
     private var isBold = false
     private var isItalic = false
@@ -20,6 +27,8 @@ class StyleTextFragment : Fragment(), View.OnClickListener {
 
     private var buttons: ArrayList<WriteCustomButton>? = null
     private var textViews: ArrayList<WriteCustomTextView>? = null
+
+    lateinit var edtChat: RichEditor
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,7 +52,8 @@ class StyleTextFragment : Fragment(), View.OnClickListener {
         ll_text_underline.setOnClickListener(this)
 
 
-        val edtChat = (requireActivity() as MainActivity).edt_chat
+        edtChat = (requireActivity() as MainActivity).edt_chat
+
         edtChat.setOnDecorationChangeListener { _, types ->
             buttons = ArrayList(
                 listOf<WriteCustomButton>(
@@ -200,6 +210,7 @@ class StyleTextFragment : Fragment(), View.OnClickListener {
                 }
             }
         }
+
         edtChat.insertText("")
     }
 
@@ -267,198 +278,6 @@ class StyleTextFragment : Fragment(), View.OnClickListener {
                 setTextStyleLayout(Style.UNDERLINE, isUnderline)
                 tv_style_underline.switchCheckedState()
             }
-        }
-    }
-
-    private fun setStyleLayout(style: Style) {
-        ll_style_left.setBackgroundColor(
-            ContextCompat.getColor(
-                requireActivity(),
-                android.R.color.white
-            )
-        )
-        ll_style_center.setBackgroundColor(
-            ContextCompat.getColor(
-                requireActivity(),
-                android.R.color.white
-            )
-        )
-        ll_style_right.setBackgroundColor(
-            ContextCompat.getColor(
-                requireActivity(),
-                android.R.color.white
-            )
-        )
-        ll_text_small.setBackgroundColor(
-            ContextCompat.getColor(
-                requireActivity(),
-                android.R.color.white
-            )
-        )
-        ll_text_normal.setBackgroundColor(
-            ContextCompat.getColor(
-                requireActivity(),
-                android.R.color.white
-            )
-        )
-        ll_text_big.setBackgroundColor(
-            ContextCompat.getColor(
-                requireActivity(),
-                android.R.color.white
-            )
-        )
-        ll_text_biggest.setBackgroundColor(
-            ContextCompat.getColor(
-                requireActivity(),
-                android.R.color.white
-            )
-        )
-
-        ll_text_bold.apply {
-            setBackgroundColor(
-                ContextCompat.getColor(
-                    requireActivity(),
-                    android.R.color.white
-                )
-            )
-            isBold = false
-        }
-
-        ll_text_italic.apply {
-            setBackgroundColor(
-                ContextCompat.getColor(
-                    requireActivity(),
-                    android.R.color.white
-                )
-            )
-            isItalic = false
-        }
-
-        ll_text_strike.apply {
-            setBackgroundColor(
-                ContextCompat.getColor(
-                    requireActivity(),
-                    android.R.color.white
-                )
-            )
-            isStrike = false
-        }
-
-        ll_text_underline.apply {
-            setBackgroundColor(
-                ContextCompat.getColor(
-                    requireActivity(),
-                    android.R.color.white
-                )
-            )
-            isUnderline = false
-        }
-
-        when (style) {
-            Style.LEFT -> {
-                ll_style_left.setBackgroundColor(
-                    ContextCompat.getColor(
-                        requireActivity(),
-                        android.R.color.black
-                    )
-                )
-                ll_text_normal.setBackgroundColor(
-                    ContextCompat.getColor(
-                        requireActivity(),
-                        android.R.color.black
-                    )
-                )
-            }
-            Style.CENTER -> {
-                ll_style_center.setBackgroundColor(
-                    ContextCompat.getColor(
-                        requireActivity(),
-                        android.R.color.black
-                    )
-                )
-                ll_text_normal.setBackgroundColor(
-                    ContextCompat.getColor(
-                        requireActivity(),
-                        android.R.color.black
-                    )
-                )
-            }
-            Style.RIGHT -> {
-                ll_style_right.setBackgroundColor(
-                    ContextCompat.getColor(
-                        requireActivity(),
-                        android.R.color.black
-                    )
-                )
-                ll_text_normal.setBackgroundColor(
-                    ContextCompat.getColor(
-                        requireActivity(),
-                        android.R.color.black
-                    )
-                )
-            }
-        }
-    }
-
-    private fun setTextSizeLayout(style: Style) {
-        ll_text_small.setBackgroundColor(
-            ContextCompat.getColor(
-                requireActivity(),
-                android.R.color.white
-            )
-        )
-        ll_text_normal.setBackgroundColor(
-            ContextCompat.getColor(
-                requireActivity(),
-                android.R.color.white
-            )
-        )
-        ll_text_big.setBackgroundColor(
-            ContextCompat.getColor(
-                requireActivity(),
-                android.R.color.white
-            )
-        )
-        ll_text_biggest.setBackgroundColor(
-            ContextCompat.getColor(
-                requireActivity(),
-                android.R.color.white
-            )
-        )
-        when (style) {
-            Style.SMALL -> {
-                ll_text_small.setBackgroundColor(
-                    ContextCompat.getColor(
-                        requireActivity(),
-                        android.R.color.black
-                    )
-                )
-            }
-            Style.NORMAL -> {
-                ll_text_normal.setBackgroundColor(
-                    ContextCompat.getColor(
-                        requireActivity(),
-                        android.R.color.black
-                    )
-                )
-            }
-            Style.BIG -> {
-                ll_text_big.setBackgroundColor(
-                    ContextCompat.getColor(
-                        requireActivity(),
-                        android.R.color.black
-                    )
-                )
-            }
-            Style.BIGGEST -> {
-                ll_text_biggest.setBackgroundColor(
-                    ContextCompat.getColor(
-                        requireActivity(),
-                        android.R.color.black
-                    )
-                )
-            }
-
         }
     }
 
@@ -537,6 +356,7 @@ class StyleTextFragment : Fragment(), View.OnClickListener {
 
     interface GalleryListener {
         fun passData(style: TextStyle)
+        fun resume()
     }
 
     enum class Style {
@@ -551,5 +371,11 @@ class StyleTextFragment : Fragment(), View.OnClickListener {
         ITALIC,
         STRIKE,
         UNDERLINE
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        edtChat.setOnDecorationChangeListener(null)
+        callback?.resume()
     }
 }
