@@ -12,7 +12,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.view.WindowManager
+import android.widget.EditText
 import android.widget.LinearLayout
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.esafirm.imagepicker.features.ImagePicker
@@ -234,6 +236,28 @@ class MainActivity : AppCompatActivity(),
                 }
             }
             R.id.ll_camera -> start(v)
+            R.id.ll_insert_link -> {
+                val builder = AlertDialog.Builder(this)
+                val inflater = this.layoutInflater
+                val view = inflater.inflate(R.layout.dialog_link, null)
+
+                val edtTitle: EditText = view.findViewById(R.id.dialog_title)
+                val edtLink: EditText = view.findViewById(R.id.dialog_href)
+                builder.run {
+                    setView(view)
+                    setPositiveButton("OK") { dialog, id ->
+                        edt_chat.insertLink(
+                            edtLink.text.toString(),
+                            edtTitle.text.toString()
+                        )
+                    }
+                    setNegativeButton("Cancel") { dialog, id ->
+                        dialog.cancel()
+                    }
+                    create().show()
+                }
+            }
+
         }
     }
 
