@@ -20,6 +20,8 @@ import androidx.core.content.ContextCompat
 import com.esafirm.imagepicker.features.ImagePicker
 import com.esafirm.imagepicker.model.Image
 import com.example.testkeyboard.RichEditor.*
+import com.example.testkeyboard.RichEditor.RichEditor.OnDecorationStateListener
+import com.example.testkeyboard.RichEditor.RichEditor.Type
 import com.example.testkeyboard.Utils.getColor
 import com.rockerhieu.emojicon.EmojiconsFragment
 import kotlinx.android.synthetic.main.activity_main.*
@@ -35,7 +37,8 @@ class MainActivity : AppCompatActivity(),
     private var hideKeyboard: Int = 0
     private var showKeyboard: Int = 0
     private var buttons: ArrayList<WriteCustomButton>? = null
-    private lateinit var onDecorationChange: RichEditor.OnDecorationStateListener
+    private var listType: MutableList<Type>? = null
+    private lateinit var onDecorationChange: OnDecorationStateListener
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,38 +66,43 @@ class MainActivity : AppCompatActivity(),
 
         edt_chat.setPlaceholder("Insert text here...")
 
-
         onDecorationChange =
-            RichEditor.OnDecorationStateListener { _, types ->
+            OnDecorationStateListener { _, types ->
                 buttons = ArrayList(
                     listOf<WriteCustomButton>(
                         imb_background_color,
                         imb_text_color
                     )
                 )
+                listType = types
+                checkStyleTextFragment()?.setStyleText(listType!!)
+
                 for (type in types) {
-                    if (type.name.contains("FONT_COLOR")) {
-                        imb_text_color.setColorFilter(
-                            ContextCompat.getColor(
-                                this,
-                                getColor(type.name)
+                    when {
+                        type.name.contains("FONT_COLOR") -> {
+                            imb_text_color.setColorFilter(
+                                ContextCompat.getColor(
+                                    this,
+                                    getColor(type.name)
+                                )
                             )
-                        )
-                        if (imb_text_color.isChecked) {
-                            imb_text_color.switchCheckedState()
+                            if (imb_text_color.isChecked) {
+                                imb_text_color.switchCheckedState()
+                            }
+                            buttons!!.remove(imb_text_color)
                         }
-                        buttons!!.remove(imb_text_color)
-                    } else if (type.name.contains("BACKGROUND_COLOR")) {
-                        imb_background_color.setColorFilter(
-                            ContextCompat.getColor(
-                                this,
-                                getColor(type.name)
+                        type.name.contains("BACKGROUND_COLOR") -> {
+                            imb_background_color.setColorFilter(
+                                ContextCompat.getColor(
+                                    this,
+                                    getColor(type.name)
+                                )
                             )
-                        )
-                        if (imb_background_color.isChecked) {
-                            imb_background_color.switchCheckedState()
+                            if (imb_background_color.isChecked) {
+                                imb_background_color.switchCheckedState()
+                            }
+                            buttons!!.remove(imb_background_color)
                         }
-                        buttons!!.remove(imb_background_color)
                     }
                 }
 
@@ -123,13 +131,6 @@ class MainActivity : AppCompatActivity(),
                     window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
                 } else {
                     window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
-                }
-
-                val galleryFragment =
-                    supportFragmentManager.findFragmentByTag(StyleTextFragment.TAG) as StyleTextFragment?
-                if (galleryFragment != null) {
-                    galleryFragment.edtChat.setOnDecorationChangeListener(null)
-                    edt_chat.setOnDecorationChangeListener(onDecorationChange)
                 }
             }
 
@@ -281,13 +282,18 @@ class MainActivity : AppCompatActivity(),
     }
 
     private fun onReplaceFragmentGalleryTalk() {
-        var styleTextFragment = supportFragmentManager.findFragmentByTag(StyleTextFragment.TAG)
+        var styleTextFragment =
+            supportFragmentManager.findFragmentByTag(StyleTextFragment.TAG)
         if (styleTextFragment == null) {
-            styleTextFragment = StyleTextFragment()
+            styleTextFragment = StyleTextFragment.newInstance(listType!!)
             styleTextFragment.callback = this
             supportFragmentManager.beginTransaction()
                 .replace(R.id.frame_bottom, styleTextFragment, StyleTextFragment.TAG).commit()
         }
+    }
+
+    private fun checkStyleTextFragment(): StyleTextFragment? {
+        return supportFragmentManager.findFragmentByTag(StyleTextFragment.TAG) as StyleTextFragment?
     }
 
     private fun onReplaceFragmentColor(type: Int) {
@@ -388,10 +394,6 @@ class MainActivity : AppCompatActivity(),
                 edt_chat.setUnderline()
             }
         }
-    }
-
-    override fun resume() {
-        edt_chat.setOnDecorationChangeListener(onDecorationChange)
     }
 
     override fun onBackPressed() {

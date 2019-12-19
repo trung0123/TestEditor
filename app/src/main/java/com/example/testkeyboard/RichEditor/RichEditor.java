@@ -16,6 +16,7 @@ import android.webkit.WebViewClient;
 
 import com.example.testkeyboard.Utils.Youtube;
 
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -48,7 +49,7 @@ import static com.example.testkeyboard.RichEditor.UtilsKt.toBitmap;
 
 public class RichEditor extends WebView {
 
-    public enum Type {
+    public enum Type implements Serializable{
         BOLD,
         ITALIC,
         SUBSCRIPT,

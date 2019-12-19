@@ -1,22 +1,30 @@
 package com.example.testkeyboard
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import com.example.testkeyboard.RichEditor.RichEditor
+import com.example.testkeyboard.RichEditor.RichEditor.Type
 import com.example.testkeyboard.RichEditor.TextStyle
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_style_text.*
+import java.io.Serializable
 
 
+@Suppress("UNCHECKED_CAST")
 class StyleTextFragment : Fragment(), View.OnClickListener {
 
     companion object {
         val TAG = StyleTextFragment::class.java.simpleName
+
+        fun newInstance(types: MutableList<Type>): StyleTextFragment {
+            val fragment = StyleTextFragment()
+            val bundle = Bundle()
+            bundle.putSerializable("types", types as Serializable)
+            fragment.arguments = bundle
+            return fragment
+        }
     }
 
     var callback: GalleryListener? = null
@@ -24,11 +32,18 @@ class StyleTextFragment : Fragment(), View.OnClickListener {
     private var isItalic = false
     private var isStrike = false
     private var isUnderline = false
+    private lateinit var types: MutableList<Type>
 
     private var buttons: ArrayList<WriteCustomButton>? = null
     private var textViews: ArrayList<WriteCustomTextView>? = null
 
-    lateinit var edtChat: RichEditor
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.let {
+            this.types = it.getSerializable("types") as MutableList<Type>
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,10 +66,12 @@ class StyleTextFragment : Fragment(), View.OnClickListener {
         ll_text_strike.setOnClickListener(this)
         ll_text_underline.setOnClickListener(this)
 
+        setStyleText(types)
+    }
 
-        edtChat = (requireActivity() as MainActivity).edt_chat
-
-        edtChat.setOnDecorationChangeListener { _, types ->
+    fun setStyleText(listType: MutableList<Type>) {
+        types = listType
+        if (types.size > 0) {
             buttons = ArrayList(
                 listOf<WriteCustomButton>(
                     imb_style_left, imb_style_center, imb_style_right
@@ -210,8 +227,6 @@ class StyleTextFragment : Fragment(), View.OnClickListener {
                 }
             }
         }
-
-        edtChat.insertText("")
     }
 
     override fun onClick(v: View?) {
@@ -356,7 +371,6 @@ class StyleTextFragment : Fragment(), View.OnClickListener {
 
     interface GalleryListener {
         fun passData(style: TextStyle)
-        fun resume()
     }
 
     enum class Style {
@@ -371,11 +385,5 @@ class StyleTextFragment : Fragment(), View.OnClickListener {
         ITALIC,
         STRIKE,
         UNDERLINE
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        edtChat.setOnDecorationChangeListener(null)
-        callback?.resume()
     }
 }
