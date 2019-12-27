@@ -59,21 +59,6 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/ll_smile"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="?attr/selectableItemBackground"
-            android:padding="@dimen/_10sdp">
-
-            <com.example.testkeyboard.WriteCustomButton
-                android:layout_width="@dimen/_20sdp"
-                android:layout_height="@dimen/_20sdp"
-                android:focusable="false"
-                android:src="@drawable/ic_tag_faces" />
-        </LinearLayout>
-
-        <LinearLayout
             android:id="@+id/ll_text_style"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -102,7 +87,7 @@
                 android:layout_width="@dimen/_20sdp"
                 android:layout_height="@dimen/_20sdp"
                 android:focusable="false"
-                android:src="@drawable/ic_format_color_fill" />
+                android:src="@drawable/ic_background_color" />
         </LinearLayout>
 
         <LinearLayout

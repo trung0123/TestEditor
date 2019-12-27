@@ -76,7 +76,7 @@
             android:gravity="center">
 
             <com.example.testkeyboard.WriteCustomTextView
-                android:id="@+id/tv_style_h4"
+                android:id="@+id/tv_small_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="A"
@@ -94,7 +94,7 @@
             android:gravity="center">
 
             <com.example.testkeyboard.WriteCustomTextView
-                android:id="@+id/tv_style_h3"
+                android:id="@+id/tv_normal_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="A"
@@ -112,7 +112,7 @@
             android:gravity="center">
 
             <com.example.testkeyboard.WriteCustomTextView
-                android:id="@+id/tv_style_h2"
+                android:id="@+id/tv_big_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="A"
@@ -129,7 +129,7 @@
             android:gravity="center">
 
             <com.example.testkeyboard.WriteCustomTextView
-                android:id="@+id/tv_style_h1"
+                android:id="@+id/tv_biggest_test"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="A"

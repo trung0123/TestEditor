@@ -19,11 +19,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.esafirm.imagepicker.features.ImagePicker
 import com.esafirm.imagepicker.model.Image
-import com.example.testkeyboard.RichEditor.*
 import com.example.testkeyboard.RichEditor.RichEditor.OnDecorationStateListener
 import com.example.testkeyboard.RichEditor.RichEditor.Type
-import com.example.testkeyboard.Utils.getColor
-import com.rockerhieu.emojicon.EmojiconsFragment
+import com.example.testkeyboard.Utils.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlin.math.abs
 
@@ -39,6 +37,7 @@ class MainActivity : AppCompatActivity(),
     private var buttons: ArrayList<WriteCustomButton>? = null
     private var listType: MutableList<Type>? = null
     private lateinit var onDecorationChange: OnDecorationStateListener
+    private var heightDiffTemp: Int = 0
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,8 +51,8 @@ class MainActivity : AppCompatActivity(),
 
     private fun initEditor() {
         edt_chat.setLayerType(View.LAYER_TYPE_HARDWARE, null)
-        edt_chat.setEditorFontSize(16)
         edt_chat.setEditorFontColor(Color.BLACK)
+        edt_chat.setFontSize(3)
         edt_chat.setEditorPadding(10, 10, 10, 10)
         edt_chat.setAlignLeft()
 
@@ -116,7 +115,6 @@ class MainActivity : AppCompatActivity(),
 
     private fun setEvents() {
         ll_text_style.setOnClickListener(this)
-        ll_smile.setOnClickListener(this)
         ll_keyboard.setOnClickListener(this)
         ll_camera.setOnClickListener(this)
         ll_text_color.setOnClickListener(this)
@@ -156,7 +154,7 @@ class MainActivity : AppCompatActivity(),
                         EstimatedKeyboardDP.toFloat(), ll_talk_main.resources.displayMetrics
                     ).toInt()
                     ll_talk_main.getWindowVisibleDisplayFrame(rect)
-                    val heightDiff: Int = ll_talk_main.rootView.height - (rect.bottom - rect.top)
+                    val heightDiff = ll_talk_main.rootView.height - (rect.bottom - rect.top)
                     Log.d("heightDiff", heightDiff.toString())
                     isShown = heightDiff >= estimatedKeyboardHeight
                     if (heightDiff <= 0) {
@@ -164,11 +162,24 @@ class MainActivity : AppCompatActivity(),
                     }
                     if (isShown == alreadyOpen) {
                         Log.i("Keyboard state", "Ignoring global layout change...")
-                        if (convertPxToDp(heightDiff) > 0) {
+                        if (!isShown && convertPxToDp(heightDiff) > 0) {
                             hideKeyboard = convertPxToDp(heightDiff)
+                        }
+                        if (isShown && heightDiff > heightDiffTemp) {
+                            heightDiffTemp = heightDiff
+                            if (convertPxToDp(heightDiff) > 100) {
+                                showKeyboard =
+                                    convertPxToDp(heightDiff)
+                                val params = LinearLayout.LayoutParams(
+                                    ViewGroup.LayoutParams.MATCH_PARENT,
+                                    convertDpToPx(abs(showKeyboard - hideKeyboard))
+                                )
+                                frame_bottom.layoutParams = params
+                            }
                         }
                         return
                     }
+                    heightDiffTemp = heightDiff
                     alreadyOpen = isShown
                     if (convertPxToDp(heightDiff) > 100) {
                         showKeyboard =
@@ -223,17 +234,6 @@ class MainActivity : AppCompatActivity(),
                 if (isShown) {
                     hideKeyboard(this)
                 }
-
-            }
-            R.id.ll_smile -> {
-                ll_keyboard.tag = "0"
-                edt_chat.tag = "0"
-                window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
-                onReplaceFragmentEmoji()
-                showGalleryLayout()
-                if (isShown) {
-                    hideKeyboard(this)
-                }
             }
             R.id.ll_text_color -> {
                 ll_keyboard.tag = "0"
@@ -277,7 +277,6 @@ class MainActivity : AppCompatActivity(),
                     create().show()
                 }
             }
-
         }
     }
 
@@ -289,6 +288,8 @@ class MainActivity : AppCompatActivity(),
             styleTextFragment.callback = this
             supportFragmentManager.beginTransaction()
                 .replace(R.id.frame_bottom, styleTextFragment, StyleTextFragment.TAG).commit()
+        } else if (!isSmilesLayoutShowing()) {
+            showGalleryLayout()
         }
     }
 
@@ -297,28 +298,19 @@ class MainActivity : AppCompatActivity(),
     }
 
     private fun onReplaceFragmentColor(type: Int) {
-        val colorFragment = ColorFragment.newInstance(type)
-        colorFragment.callback = this
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.frame_bottom, colorFragment, ColorFragment.TAG).commit()
+        var colorFragment = supportFragmentManager.findFragmentByTag(ColorFragment.TAG + type)
+        if (colorFragment == null) {
+            colorFragment = ColorFragment.newInstance(type)
+            colorFragment.callback = this
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.frame_bottom, colorFragment, ColorFragment.TAG + type).commit()
+        } else if (!isSmilesLayoutShowing()) {
+            showGalleryLayout()
+        }
     }
 
     private fun showGalleryLayout() {
         frame_bottom.visibility = View.VISIBLE
-    }
-
-    private fun onReplaceFragmentEmoji() {
-        val fragment =
-            supportFragmentManager.findFragmentByTag("emojiconsFragment") as EmojiconsFragment?
-        if (fragment == null) {
-            supportFragmentManager
-                .beginTransaction()
-                .replace(
-                    R.id.frame_bottom,
-                    EmojiconsFragment.newInstance(false),
-                    "emojiconsFragment"
-                ).commit()
-        }
     }
 
     private fun hideGalleryLayout() {
@@ -331,42 +323,46 @@ class MainActivity : AppCompatActivity(),
 
     override fun passData(style: TextStyle) {
         when (style) {
-            TextStyle.H1 -> {
+            TextStyle.Small -> {
                 window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
-                edt_chat.setHeading(1)
-                edt_chat.clearFocusEditor()
+
+                edt_chat.setFontSize(3)
+                edt_chat.clearAndFocusEditor()
             }
-            TextStyle.H2 -> {
+            TextStyle.Normal -> {
                 window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
-                edt_chat.setHeading(2)
-                edt_chat.clearFocusEditor()
+
+                edt_chat.setFontSize(4)
+                edt_chat.clearAndFocusEditor()
             }
-            TextStyle.H3 -> {
+            TextStyle.Big -> {
                 window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
-                edt_chat.setHeading(3)
-                edt_chat.clearFocusEditor()
+
+                edt_chat.setFontSize(5)
+                edt_chat.clearAndFocusEditor()
             }
-            TextStyle.H4 -> {
+            TextStyle.Biggest -> {
                 window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
-                edt_chat.setHeading(4)
-                edt_chat.clearFocusEditor()
+
+                edt_chat.setFontSize(6)
+                edt_chat.clearAndFocusEditor()
             }
             TextStyle.TextLeft -> {
                 window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
 
                 edt_chat.setAlignLeft()
-                edt_chat.clearFocusEditor()
+//                edt_chat.clearFocusEditor()
             }
             TextStyle.TextCenter -> {
                 window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
 
                 edt_chat.setAlignCenter()
-                edt_chat.clearFocusEditor()
+//                edt_chat.clearFocusEditor()
             }
             TextStyle.TextRight -> {
                 window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
 
-                edt_chat.clearFocusEditor()
+//                edt_chat.clearFocusEditor()
                 edt_chat.setAlignRight()
             }
             TextStyle.Bold -> {

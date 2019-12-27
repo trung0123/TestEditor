@@ -11,6 +11,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Gravity;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -26,10 +27,10 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.example.testkeyboard.RichEditor.UtilsKt.decodeResource;
-import static com.example.testkeyboard.RichEditor.UtilsKt.getCurrentTime;
-import static com.example.testkeyboard.RichEditor.UtilsKt.toBase64;
-import static com.example.testkeyboard.RichEditor.UtilsKt.toBitmap;
+import static com.example.testkeyboard.Utils.UtilsKt.decodeResource;
+import static com.example.testkeyboard.Utils.UtilsKt.getCurrentTime;
+import static com.example.testkeyboard.Utils.UtilsKt.toBase64;
+import static com.example.testkeyboard.Utils.UtilsKt.toBitmap;
 
 /**
  * Copyright (C) 2017 Wasabeef
@@ -49,7 +50,7 @@ import static com.example.testkeyboard.RichEditor.UtilsKt.toBitmap;
 
 public class RichEditor extends WebView {
 
-    public enum Type implements Serializable{
+    public enum Type implements Serializable {
         BOLD,
         ITALIC,
         SUBSCRIPT,
@@ -95,7 +96,11 @@ public class RichEditor extends WebView {
         FONT_COLOR_BLUE(0, 0, 255),
         FONT_COLOR_SKY_BLUE(0, 204, 255),
         FONT_COLOR_PALE_CYAN(204, 255, 255),
-        FONT_COLOR_GREEN(0, 128, 0);
+        FONT_COLOR_GREEN(0, 128, 0),
+        FONTSIZE_3,
+        FONTSIZE_4,
+        FONTSIZE_5,
+        FONTSIZE_6;
 
         private int r;
         private int g;
@@ -527,7 +532,8 @@ public class RichEditor extends WebView {
         }
 
         @Override
-        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+        public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+            String url = request.getUrl().toString();
             String decode;
             String re_callback = "";
             String re_state = "";
@@ -571,8 +577,56 @@ public class RichEditor extends WebView {
             }
 
 
-            return super.shouldOverrideUrlLoading(view, url);
+            return super.shouldOverrideUrlLoading(view, request);
         }
+
+//        @Override
+//        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+//            String decode;
+//            String re_callback = "";
+//            String re_state = "";
+//            boolean isRegexFound;
+//            try {
+//                decode = URLDecoder.decode(url, "UTF-8");
+//                String pattern = "(re-callback://.*)(re-state://.*)";
+//                Pattern p;
+//                Matcher m;
+//                p = Pattern.compile(pattern);
+//                m = p.matcher(decode);
+//                isRegexFound = m.find();
+//                if (isRegexFound) {
+//                    re_callback = m.group(1);
+//                    re_state = m.group(2);
+//                }
+//            } catch (UnsupportedEncodingException e) {
+//                // No handling
+//                return false;
+//            }
+//
+//            // User clicks the link that is youtube then post video id.
+//            if (!Youtube.getVideoId(url).equals("error")) {
+//                String videoid = Youtube.getVideoId(url);
+//                if (!videoid.equals("error")) {
+//                    if (mLoadYoutubeLinkListener != null) {
+//                        mLoadYoutubeLinkListener.onReceivedEvent(videoid);
+//                    }
+//                }
+//                return true;
+//            } else if (isRegexFound) {
+//                callback(re_callback);
+//                stateCheck(re_state);
+//                return true;
+//            } else if (TextUtils.indexOf(url, STATE_SCHEME) == 0) {
+//                stateCheck(decode);
+//                return true;
+//            } else if (TextUtils.indexOf(url, CALLBACK_SCHEME) == 0) {
+//                callback(decode);
+//                return true;
+//            }
+//
+//
+//            return super.shouldOverrideUrlLoading(view, url);
+//        }
     }
 
 }

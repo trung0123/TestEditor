@@ -1,4 +1,4 @@
-package com.example.testkeyboard.RichEditor
+package com.example.testkeyboard.Utils
 
 import android.app.Activity
 import android.app.Dialog
@@ -9,7 +9,6 @@ import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
-import android.os.Environment
 import android.util.Base64
 import android.view.View
 import android.view.WindowManager
@@ -63,10 +62,10 @@ fun showSoftKeyboard(dialog: Dialog) {
 }
 
 sealed class TextStyle {
-    object H1 : TextStyle()
-    object H2 : TextStyle()
-    object H3 : TextStyle()
-    object H4 : TextStyle()
+    object Small : TextStyle()
+    object Normal : TextStyle()
+    object Big : TextStyle()
+    object Biggest : TextStyle()
     object TextLeft : TextStyle()
     object TextCenter : TextStyle()
     object TextRight : TextStyle()

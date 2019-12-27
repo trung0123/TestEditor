@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.testkeyboard.RichEditor.RichEditor.Type
-import com.example.testkeyboard.RichEditor.TextStyle
+import com.example.testkeyboard.Utils.TextStyle
 import kotlinx.android.synthetic.main.fragment_style_text.*
 import java.io.Serializable
 
@@ -28,10 +28,6 @@ class StyleTextFragment : Fragment(), View.OnClickListener {
     }
 
     var callback: GalleryListener? = null
-    private var isBold = false
-    private var isItalic = false
-    private var isStrike = false
-    private var isUnderline = false
     private lateinit var types: MutableList<Type>
 
     private var buttons: ArrayList<WriteCustomButton>? = null
@@ -79,7 +75,8 @@ class StyleTextFragment : Fragment(), View.OnClickListener {
             )
             textViews = ArrayList(
                 listOf<WriteCustomTextView>(
-                    tv_style_h4, tv_style_h3, tv_style_h2, tv_style_h1
+                    tv_small_text, tv_normal_text, tv_big_text, tv_biggest_test,
+                    tv_style_bold, tv_style_italic, tv_style_strike, tv_style_underline
                 )
             )
             for (type in types) {
@@ -123,9 +120,9 @@ class StyleTextFragment : Fragment(), View.OnClickListener {
                         )
                         buttons!!.remove(imb_style_right)
                     }
-                    "H1" -> {
-                        if (tv_style_h1.isChecked) {
-                            tv_style_h1.switchCheckedState()
+                    "FONTSIZE_6" -> {
+                        if (tv_biggest_test.isChecked) {
+                            tv_biggest_test.switchCheckedState()
                         }
                         ll_text_biggest.setBackgroundColor(
                             ContextCompat.getColor(
@@ -133,11 +130,11 @@ class StyleTextFragment : Fragment(), View.OnClickListener {
                                 R.color.black
                             )
                         )
-                        textViews!!.remove(tv_style_h1)
+                        textViews!!.remove(tv_biggest_test)
                     }
-                    "H2" -> {
-                        if (tv_style_h2.isChecked) {
-                            tv_style_h2.switchCheckedState()
+                    "FONTSIZE_5" -> {
+                        if (tv_big_text.isChecked) {
+                            tv_big_text.switchCheckedState()
                         }
                         ll_text_big.setBackgroundColor(
                             ContextCompat.getColor(
@@ -145,11 +142,11 @@ class StyleTextFragment : Fragment(), View.OnClickListener {
                                 R.color.black
                             )
                         )
-                        textViews!!.remove(tv_style_h2)
+                        textViews!!.remove(tv_big_text)
                     }
-                    "H3" -> {
-                        if (tv_style_h3.isChecked) {
-                            tv_style_h3.switchCheckedState()
+                    "FONTSIZE_4" -> {
+                        if (tv_normal_text.isChecked) {
+                            tv_normal_text.switchCheckedState()
                         }
                         ll_text_normal.setBackgroundColor(
                             ContextCompat.getColor(
@@ -157,11 +154,11 @@ class StyleTextFragment : Fragment(), View.OnClickListener {
                                 R.color.black
                             )
                         )
-                        textViews!!.remove(tv_style_h3)
+                        textViews!!.remove(tv_normal_text)
                     }
-                    "H4" -> {
-                        if (tv_style_h4.isChecked) {
-                            tv_style_h4.switchCheckedState()
+                    "FONTSIZE_3" -> {
+                        if (tv_small_text.isChecked) {
+                            tv_small_text.switchCheckedState()
                         }
                         ll_text_small.setBackgroundColor(
                             ContextCompat.getColor(
@@ -169,7 +166,55 @@ class StyleTextFragment : Fragment(), View.OnClickListener {
                                 R.color.black
                             )
                         )
-                        textViews!!.remove(tv_style_h4)
+                        textViews!!.remove(tv_small_text)
+                    }
+                    "BOLD" -> {
+                        if (tv_style_bold.isChecked) {
+                            tv_style_bold.switchCheckedState()
+                        }
+                        ll_text_bold.setBackgroundColor(
+                            ContextCompat.getColor(
+                                requireActivity(),
+                                R.color.black
+                            )
+                        )
+                        textViews!!.remove(tv_style_bold)
+                    }
+                    "ITALIC" -> {
+                        if (tv_style_italic.isChecked) {
+                            tv_style_italic.switchCheckedState()
+                        }
+                        ll_text_italic.setBackgroundColor(
+                            ContextCompat.getColor(
+                                requireActivity(),
+                                R.color.black
+                            )
+                        )
+                        textViews!!.remove(tv_style_italic)
+                    }
+                    "STRIKETHROUGH" -> {
+                        if (tv_style_strike.isChecked) {
+                            tv_style_strike.switchCheckedState()
+                        }
+                        ll_text_strike.setBackgroundColor(
+                            ContextCompat.getColor(
+                                requireActivity(),
+                                R.color.black
+                            )
+                        )
+                        textViews!!.remove(tv_style_strike)
+                    }
+                    "UNDERLINE" -> {
+                        if (tv_style_underline.isChecked) {
+                            tv_style_underline.switchCheckedState()
+                        }
+                        ll_text_underline.setBackgroundColor(
+                            ContextCompat.getColor(
+                                requireActivity(),
+                                R.color.black
+                            )
+                        )
+                        textViews!!.remove(tv_style_underline)
                     }
                 }
             }
@@ -200,25 +245,49 @@ class StyleTextFragment : Fragment(), View.OnClickListener {
             for (textView in textViews!!) {
                 textView.isChecked = false
                 when (textView.id) {
-                    R.id.tv_style_h1 -> ll_text_biggest.setBackgroundColor(
+                    R.id.tv_biggest_test -> ll_text_biggest.setBackgroundColor(
                         ContextCompat.getColor(
                             requireActivity(),
                             R.color.white
                         )
                     )
-                    R.id.tv_style_h2 -> ll_text_big.setBackgroundColor(
+                    R.id.tv_big_text -> ll_text_big.setBackgroundColor(
                         ContextCompat.getColor(
                             requireActivity(),
                             R.color.white
                         )
                     )
-                    R.id.tv_style_h3 -> ll_text_normal.setBackgroundColor(
+                    R.id.tv_normal_text -> ll_text_normal.setBackgroundColor(
                         ContextCompat.getColor(
                             requireActivity(),
                             R.color.white
                         )
                     )
-                    R.id.tv_style_h4 -> ll_text_small.setBackgroundColor(
+                    R.id.tv_small_text -> ll_text_small.setBackgroundColor(
+                        ContextCompat.getColor(
+                            requireActivity(),
+                            R.color.white
+                        )
+                    )
+                    R.id.tv_style_bold -> ll_text_bold.setBackgroundColor(
+                        ContextCompat.getColor(
+                            requireActivity(),
+                            R.color.white
+                        )
+                    )
+                    R.id.tv_style_italic -> ll_text_italic.setBackgroundColor(
+                        ContextCompat.getColor(
+                            requireActivity(),
+                            R.color.white
+                        )
+                    )
+                    R.id.tv_style_strike -> ll_text_strike.setBackgroundColor(
+                        ContextCompat.getColor(
+                            requireActivity(),
+                            R.color.white
+                        )
+                    )
+                    R.id.tv_style_underline -> ll_text_underline.setBackgroundColor(
                         ContextCompat.getColor(
                             requireActivity(),
                             R.color.white
@@ -247,143 +316,48 @@ class StyleTextFragment : Fragment(), View.OnClickListener {
             }
 
             R.id.ll_text_small -> {
-                callback?.passData(TextStyle.H4)
-                tv_style_h4.switchCheckedState()
+                callback?.passData(TextStyle.Small)
+                tv_small_text.switchCheckedState()
             }
 
             R.id.ll_text_normal -> {
-                callback?.passData(TextStyle.H3)
-                tv_style_h3.switchCheckedState()
+                callback?.passData(TextStyle.Normal)
+                tv_normal_text.switchCheckedState()
             }
 
             R.id.ll_text_big -> {
-                callback?.passData(TextStyle.H2)
-                tv_style_h2.switchCheckedState()
+                callback?.passData(TextStyle.Big)
+                tv_big_text.switchCheckedState()
             }
 
             R.id.ll_text_biggest -> {
-                callback?.passData(TextStyle.H1)
-                tv_style_h1.switchCheckedState()
+                callback?.passData(TextStyle.Biggest)
+                tv_biggest_test.switchCheckedState()
             }
 
             R.id.ll_text_bold -> {
-                isBold = !isBold
                 callback?.passData(TextStyle.Bold)
-                setTextStyleLayout(Style.BOLD, isBold)
                 tv_style_bold.switchCheckedState()
             }
 
             R.id.ll_text_italic -> {
-                isItalic = !isItalic
                 callback?.passData(TextStyle.Italic)
-                setTextStyleLayout(Style.ITALIC, isItalic)
                 tv_style_italic.switchCheckedState()
             }
 
             R.id.ll_text_strike -> {
-                isStrike = !isStrike
                 callback?.passData(TextStyle.StrikeThrough)
-                setTextStyleLayout(Style.STRIKE, isStrike)
                 tv_style_strike.switchCheckedState()
             }
 
             R.id.ll_text_underline -> {
-                isUnderline = !isUnderline
                 callback?.passData(TextStyle.Underline)
-                setTextStyleLayout(Style.UNDERLINE, isUnderline)
                 tv_style_underline.switchCheckedState()
-            }
-        }
-    }
-
-    private fun setTextStyleLayout(style: Style, state: Boolean) {
-        when (style) {
-            Style.BOLD -> {
-                if (state) {
-                    ll_text_bold.setBackgroundColor(
-                        ContextCompat.getColor(
-                            requireActivity(),
-                            android.R.color.black
-                        )
-                    )
-                } else {
-                    ll_text_bold.setBackgroundColor(
-                        ContextCompat.getColor(
-                            requireActivity(),
-                            android.R.color.white
-                        )
-                    )
-                }
-            }
-            Style.ITALIC -> {
-                if (state) {
-                    ll_text_italic.setBackgroundColor(
-                        ContextCompat.getColor(
-                            requireActivity(),
-                            android.R.color.black
-                        )
-                    )
-                } else {
-                    ll_text_italic.setBackgroundColor(
-                        ContextCompat.getColor(
-                            requireActivity(),
-                            android.R.color.white
-                        )
-                    )
-                }
-            }
-            Style.STRIKE -> {
-                if (state) {
-                    ll_text_strike.setBackgroundColor(
-                        ContextCompat.getColor(
-                            requireActivity(),
-                            android.R.color.black
-                        )
-                    )
-                } else {
-                    ll_text_strike.setBackgroundColor(
-                        ContextCompat.getColor(
-                            requireActivity(),
-                            android.R.color.white
-                        )
-                    )
-                }
-            }
-            Style.UNDERLINE -> {
-                if (state) {
-                    ll_text_underline.setBackgroundColor(
-                        ContextCompat.getColor(
-                            requireActivity(),
-                            android.R.color.black
-                        )
-                    )
-                } else {
-                    ll_text_underline.setBackgroundColor(
-                        ContextCompat.getColor(
-                            requireActivity(),
-                            android.R.color.white
-                        )
-                    )
-                }
             }
         }
     }
 
     interface GalleryListener {
         fun passData(style: TextStyle)
-    }
-
-    enum class Style {
-        LEFT,
-        RIGHT,
-        CENTER,
-        SMALL,
-        NORMAL,
-        BIG,
-        BIGGEST,
-        BOLD,
-        ITALIC,
-        STRIKE,
-        UNDERLINE
     }
 }

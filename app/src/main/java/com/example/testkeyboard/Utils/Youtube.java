@@ -16,8 +16,8 @@ import com.example.testkeyboard.RichEditor.RichEditor;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.example.testkeyboard.RichEditor.UtilsKt.closeKeyboard;
-import static com.example.testkeyboard.RichEditor.UtilsKt.showSoftKeyboard;
+import static com.example.testkeyboard.Utils.UtilsKt.closeKeyboard;
+import static com.example.testkeyboard.Utils.UtilsKt.showSoftKeyboard;
 
 public class Youtube {
 

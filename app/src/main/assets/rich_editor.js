@@ -34,11 +34,19 @@ RE.callback = function() {
 
         var items = [];
 
-        if (window.getComputedStyle(window.getSelection().getRangeAt(0).startContainer.parentNode, "background-color")) {
-            items.push('background_color_' + window.getComputedStyle(window.getSelection().getRangeAt(0).startContainer.parentNode, "background-color").getPropertyValue('background-color'));
+//        if (window.getComputedStyle(window.getSelection().getRangeAt(0).startContainer.parentNode, "background-color")) {
+//            items.push('background_color_' + window.getComputedStyle(window.getSelection().getRangeAt(0).startContainer.parentNode, "background-color").getPropertyValue('background-color'));
+//         }
+//        if (window.getComputedStyle(window.getSelection().getRangeAt(0).startContainer.parentNode, "color")) {
+//             items.push('font_color_' + window.getComputedStyle(window.getSelection().getRangeAt(0).startContainer.parentNode, "color").getPropertyValue('color'));
+//         }
+         if(document.queryCommandEnabled('backColor')){
+             var backColor = document.queryCommandValue('backColor')
+             items.push('background_color_'+backColor);
          }
-        if (window.getComputedStyle(window.getSelection().getRangeAt(0).startContainer.parentNode, "color")) {
-             items.push('font_color_' + window.getComputedStyle(window.getSelection().getRangeAt(0).startContainer.parentNode, "color").getPropertyValue('color'));
+         if(document.queryCommandEnabled('foreColor')){
+              var foreColor = document.queryCommandValue('foreColor')
+              items.push('font_color_'+foreColor);
          }
         if (document.queryCommandState('bold')) {
             items.push('bold');
@@ -82,6 +90,10 @@ RE.callback = function() {
         var formatBlock = document.queryCommandValue('formatBlock');
         if (formatBlock.length > 0) {
             items.push(formatBlock);
+        }
+        if(document.queryCommandEnabled('fontSize')){
+            var size = document.queryCommandValue('fontSize')
+            items.push('fontSize_'+size);
         }
 
         window.location.href = re_callback + "re-state://" + encodeURI(items.join(','));
@@ -203,7 +215,7 @@ RE.setTextColor = function(color) {
 RE.setTextBackgroundColor = function(color) {
     RE.restorerange();
     document.execCommand("styleWithCSS", null, true);
-    document.execCommand('hiliteColor', false, color);
+    document.execCommand('backColor', false, color);
     document.execCommand("styleWithCSS", null, false);
 }
 
@@ -353,6 +365,10 @@ RE.enabledEditingItems = function(e) {
     var formatBlock = document.queryCommandValue('formatBlock');
     if (formatBlock.length > 0) {
         items.push(formatBlock);
+    }
+    if(document.queryCommandEnabled('fontSize')){
+        var size = document.queryCommandValue('fontSize')
+        items.push('fontSize_'+size);
     }
 
     window.location.href = "re-state://" + encodeURI(items.join(','));
